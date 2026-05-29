@@ -25,6 +25,7 @@ frameworks:
 
 runtimes_tooling:
   preferred_runtime: bun
+  version_manager: mise            # single version manager: all runtimes on latest stable or LTS
   package_managers: [bun, pnpm, npm, gradle, pipx]
   containers: [docker, docker-compose]
   orchestration: [k3s, kubernetes]

@@ -53,10 +53,12 @@ present_claude=false
 present_opencode=false
 present_codex=false
 present_gemini=false
+present_mise=false
 if have claude   || [ -d "$HOME/.claude" ];          then present_claude=true; fi
 if have opencode || [ -d "$HOME/.config/opencode" ]; then present_opencode=true; fi
 if have codex    || [ -d "$HOME/.codex" ];           then present_codex=true; fi
 if have gemini   || [ -d "$HOME/.gemini" ];          then present_gemini=true; fi
+if have mise     || [ -d "$HOME/.config/mise" ];     then present_mise=true; fi
 
 AGENTS="$HARNXSS/agents/AGENTS.md"
 
@@ -82,6 +84,7 @@ fi
 if $present_opencode; then backup_then_link "$HARNXSS/tools/opencode/opencode.json" "$HOME/.config/opencode/opencode.json"; fi
 if $present_codex;    then backup_then_link "$HARNXSS/tools/codex/config.toml"       "$HOME/.codex/config.toml"; fi
 if $present_gemini;   then backup_then_link "$HARNXSS/tools/gemini/settings.json"    "$HOME/.gemini/settings.json"; fi
+if $present_mise;     then backup_then_link "$HARNXSS/tools/mise/config.toml"         "$HOME/.config/mise/config.toml"; fi
 
 # ── Skills (first-party) → each tool's skills dir ────────────────────────────
 echo "skills:"

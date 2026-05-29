@@ -54,6 +54,7 @@ The installer only touches tools that are present, backs up any existing real fi
 | `tools/opencode/opencode.json`  | `~/.config/opencode/opencode.json`   |
 | `tools/codex/config.toml`       | `~/.codex/config.toml`               |
 | `tools/gemini/settings.json`    | `~/.gemini/settings.json` (if present) |
+| `tools/mise/config.toml`        | `~/.config/mise/config.toml` (if present) |
 | `agents/skills/<name>`          | `~/.claude/skills/`, `~/.config/opencode/skill/`, `~/.codex/skills/` |
 | `agents/commands/<name>.md`     | `~/.claude/commands/`, `~/.config/opencode/command/` |
 
@@ -87,3 +88,7 @@ If `{env:}` ever fails for a custom OpenCode provider, switch that field to `"{f
 - **Codex** — the global `AGENTS.md` is capped at 32 KiB; keep it lean (≤ ~5 KB).
 - Env vars must be exported in the shell that **launches** the tool. fish loads `conf.d/*.fish`
   automatically; a GUI launcher that doesn't source fish would leave them empty.
+
+## Credits
+
+LLM inference powered by **NaN**, an inference service — [nan.builders](https://nan.builders) · [justuse.nan.builders](https://justuse.nan.builders).

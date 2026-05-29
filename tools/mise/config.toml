@@ -1,0 +1,13 @@
+# mise — global runtime versions for Nxssie. mise is THE single version manager (everything).
+# Policy: latest stable or LTS for every runtime.
+# Symlinked from harnxss to ~/.config/mise/config.toml; run `mise install` after changes.
+
+[tools]
+bun = "latest"
+go = "latest"
+gradle = "9.5.0"
+java = "corretto-25"   # current LTS (Amazon Corretto 25)
+maven = "latest"
+node = "lts"
+python = "latest"
+rust = "latest"

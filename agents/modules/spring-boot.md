@@ -1,10 +1,10 @@
 # Module: Java / Spring Boot
 
-Conventions for Spring Boot (Java 21) backends, Clean Architecture.
+Conventions for Spring Boot (Java 25 LTS) backends, Clean Architecture.
 
 - **Layers**: keep domain free of framework/IO. Controller → Service → Repository; map DTOs at the
   edge, never leak JPA entities through the API.
-- **Java 21**: use records for DTOs/value objects, sealed types where modelling closed hierarchies,
+- **Java 25 (LTS)**: use records for DTOs/value objects, sealed types where modelling closed hierarchies,
   pattern matching, virtual threads where they help.
 - **Persistence**: JPA/Hibernate, UUID primary keys, Flyway or explicit migrations for prod (avoid
   `ddl-auto=update` outside dev). PostgreSQL is the default DB.

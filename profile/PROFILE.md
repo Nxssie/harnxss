@@ -17,7 +17,8 @@ self-host most of what I run, picking the right tool per problem rather than for
 - Production-ready by default: real error handling, secure defaults, no pseudo-code.
 - Clean Architecture + SOLID/DRY/KISS, applied pragmatically.
 - Atomic, Conventional Commits.
-- Modern stable language features (Java 21 records, ES2024+, Python 3.12+).
+- All runtimes on latest stable or LTS via mise (single version manager).
+- Modern language features (Java 25 records, modern ES, async Python).
 
 ## Languages
 Spanish (native) · English (professional).

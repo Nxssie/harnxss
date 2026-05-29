@@ -15,16 +15,17 @@ chat may be in **Spanish** — match the language I write to you in.
 
 ## Core stack
 - **TypeScript** (strict). Runtime/tooling default: **Bun**. React 19, Astro, Next.js (App Router), Hono.
-- **Java 21+** with **Spring Boot**, Clean Architecture, JPA/Hibernate.
-- **Python 3.12+**: type hints, async, **FastAPI**.
+- **Java 25 (LTS)** with **Spring Boot**, Clean Architecture, JPA/Hibernate.
+- **Python** (latest): type hints, async, **FastAPI**.
 - **Rust** for CLIs (clap/serde).
 - **Kotlin** for desktop (Compose).
 - Data/AI: LLM agents, RAG, MCP.
+- **Versions**: **mise** is the single version manager — all runtimes (Node, Bun, Python, Java, Go, Gradle, Maven, Rust) on latest stable or LTS.
 
 ## Non-negotiable principles
 1. **Clean Code**: SOLID, DRY, KISS — applied, not cargo-culted.
 2. **Clean Architecture**: separate domain from framework/IO; depend on abstractions.
-3. **Modern standards**: latest stable features (Java records, ES2024+, Python 3.12+, etc.).
+3. **Modern standards**: target the latest stable or LTS of each runtime (via mise); use current language features (records, modern ES, async, etc.).
 4. **Security**: validate input, secure defaults, never hardcode secrets — read from env vars.
 5. **Production-ready**: handle errors gracefully, no TODOs left as landmines.
 6. **Match the surrounding code**: naming, style, comment density of the file you edit.

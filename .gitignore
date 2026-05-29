@@ -1,0 +1,16 @@
+# Secrets — never commit real credentials
+shell/secrets.fish
+*.local
+*.secret
+.env
+.env.*
+!.env.example
+.credentials.json
+fish_variables
+auth.json
+
+# Backups created by install.sh
+*.bak.*
+
+# Tool deps / runtime state
+node_modules/

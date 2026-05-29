@@ -1,0 +1,42 @@
+# skills.yaml — machine-readable competency profile for Nxssie.
+# Languages, frameworks, tooling and methodologies I work with.
+# Intentionally AGNOSTIC: no specific projects, their content, or per-project stacks.
+
+identity:
+  name: Carlos Sánchez
+  handle: nxssie
+  role: Senior fullstack engineer
+
+# expert | advanced | proficient | familiar
+languages:
+  typescript: expert
+  java: advanced
+  python: advanced
+  rust: proficient
+  kotlin: proficient
+  bash: proficient
+  sql: advanced
+
+frameworks:
+  frontend: [react, astro, nextjs, vite, tailwind]
+  backend: [spring-boot, fastapi, hono]
+  desktop_mobile: [compose-desktop, react-native]
+  data_ai: [llamaindex, mcp, vercel-ai-sdk]
+
+runtimes_tooling:
+  preferred_runtime: bun
+  package_managers: [bun, pnpm, npm, gradle, pipx]
+  containers: [docker, docker-compose]
+  orchestration: [k3s, kubernetes]
+  iac: [terraform]
+  proxy: [caddy, nginx]
+  paas: [coolify, dokploy]
+  ci: [github-actions]
+  shell: fish
+
+methodologies:
+  architecture: clean-architecture
+  principles: [SOLID, DRY, KISS]
+  commits: conventional-commits
+  code_style: [production-ready, modern-stable-features, security-first]
+  databases: [postgresql, sqlite]

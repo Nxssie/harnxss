@@ -27,8 +27,6 @@ install.sh            idempotent symlink installer
 
 ```sh
 sh install.sh
-# or, if Claude permissions/perf act up with a symlinked settings.json (issue #3575):
-sh install.sh --copy-claude-settings
 ```
 
 Then set your secrets and reload the shell:
@@ -81,8 +79,9 @@ If `{env:}` ever fails for a custom OpenCode provider, switch that field to `"{f
 2. Re-run `sh install.sh`. It symlinks the new resource into every present tool.
 
 ## Known caveats
-- **Claude #3575** — a symlinked `settings.json` can drop permission rules / be slow. Use
-  `--copy-claude-settings` if you hit it.
+- **Claude `settings.json` is copied, not symlinked** — Claude Code rewrites it at runtime (model,
+  effort, flags), which would clobber the versioned hub file. The installer seeds it from the hub on
+  first run; Claude owns the local copy after that.
 - **Claude #25367** — a symlinked skill may log a cosmetic "Unknown skill" warning but still runs.
 - **OpenCode #18848** — symlinked skills aren't discovered inside a git-worktree sandbox session.
 - **Codex** — the global `AGENTS.md` is capped at 32 KiB; keep it lean (≤ ~5 KB).

@@ -8,18 +8,15 @@
 # Only touches tools that are present (binary on PATH or config dir exists).
 #
 # Usage:
-#   sh install.sh                          # symlink everything (default)
-#   sh install.sh --copy-claude-settings   # copy ~/.claude/settings.json instead of symlink
-#                                           # (workaround for Claude issue #3575)
+#   sh install.sh        # symlink resources into each tool's global config (idempotent)
+#
+# Note: ~/.claude/settings.json is COPIED (not symlinked) — Claude Code rewrites it at runtime
+# (model, effort, flags) and would otherwise clobber the versioned hub file.
 set -eu
 
 HARNXSS="$(cd "$(dirname "$0")" && pwd)"
-COPY_CLAUDE_SETTINGS=false
 for arg in "$@"; do
-  case "$arg" in
-    --copy-claude-settings) COPY_CLAUDE_SETTINGS=true ;;
-    *) echo "unknown arg: $arg" >&2; exit 2 ;;
-  esac
+  echo "unknown arg: $arg" >&2; exit 2
 done
 
 have() { command -v "$1" >/dev/null 2>&1; }
@@ -75,10 +72,14 @@ if $present_gemini;   then backup_then_link "$AGENTS" "$HOME/.gemini/GEMINI.md";
 # ── Tool configs (secrets externalized) ──────────────────────────────────────
 echo "tool configs:"
 if $present_claude; then
-  if $COPY_CLAUDE_SETTINGS; then
-    backup_then_link "$HARNXSS/tools/claude/settings.json" "$HOME/.claude/settings.json" copy
+  cs="$HOME/.claude/settings.json"
+  if [ -L "$cs" ] || [ ! -e "$cs" ]; then
+    if [ -L "$cs" ]; then rm -f "$cs"; fi   # migrate old symlink → real copy
+    mkdir -p "$(dirname "$cs")"
+    cp "$HARNXSS/tools/claude/settings.json" "$cs"
+    echo "  copy    $cs (seeded; Claude manages this local copy from here)"
   else
-    backup_then_link "$HARNXSS/tools/claude/settings.json" "$HOME/.claude/settings.json"
+    echo "  keep    $cs (real file, Claude-managed)"
   fi
 fi
 if $present_opencode; then backup_then_link "$HARNXSS/tools/opencode/opencode.json" "$HOME/.config/opencode/opencode.json"; fi

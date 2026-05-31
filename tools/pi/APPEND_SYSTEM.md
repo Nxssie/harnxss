@@ -8,6 +8,7 @@
 - Match the language the user writes in (Spanish or English).
 
 ## Tool discipline
+- Never stop mid-task. After reading a file or forming a plan, proceed immediately with implementation — don't pause waiting for acknowledgement.
 - Read before editing. Never assume file contents.
 - Prefer `edit` over `write` — send the smallest diff that works.
 - Bash: default to safe, idempotent commands. Confirm before anything destructive or hard to reverse.

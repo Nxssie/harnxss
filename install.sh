@@ -103,6 +103,7 @@ for skilldir in "$HARNXSS"/agents/skills/*; do
   if $present_claude;   then backup_then_link "$skilldir" "$HOME/.claude/skills/$name"; fi
   if $present_opencode; then backup_then_link "$skilldir" "$HOME/.config/opencode/skill/$name"; fi
   if $present_codex;    then backup_then_link "$skilldir" "$HOME/.codex/skills/$name"; fi
+  if $present_pi;       then backup_then_link "$skilldir" "$HOME/.pi/agent/skills/$name"; fi
 done
 
 # ── Commands → Claude (and OpenCode) command dirs ────────────────────────────

@@ -30,10 +30,11 @@ chat may be in **Spanish** — match the language I write to you in.
 5. **Production-ready**: handle errors gracefully, no TODOs left as landmines.
 6. **Match the surrounding code**: naming, style, comment density of the file you edit.
 
-## Git
+## Git & commits
+- **Only commit or push when the user explicitly asks.** Never auto-commit or auto-push.
 - **Atomic commits**: one logical change per commit.
 - **Conventional Commits**: `type(scope): description` — feat, fix, docs, style, refactor, test, chore, ci, build.
-  Use the `commit` skill for the full workflow.
+  The `commit` skill is your workflow guide — use it **only** when the user instructs you to commit.
 - Branch before committing on a default branch. Never commit secrets.
 
 ## Deploy & self-hosting (my defaults)

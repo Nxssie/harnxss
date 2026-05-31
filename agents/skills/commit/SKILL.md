@@ -1,6 +1,6 @@
 ---
 name: commit
-description: Create atomic git commits following the Conventional Commits spec. Use when the user asks to commit, stage changes, or write a commit message. Inspects the diff, groups changes into logical units, and writes type(scope): description messages.
+description: "Create atomic git commits following the Conventional Commits spec. Use when the user asks to commit, stage changes, or write a commit message. Inspects the diff, groups changes into logical units, and writes type(scope): description messages."
 ---
 
 # commit

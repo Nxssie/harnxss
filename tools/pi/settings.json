@@ -1,4 +1,5 @@
 {
   "defaultProvider": "nan",
-  "defaultModel": "deepseek-v4-flash"
+  "defaultModel": "deepseek-v4-flash",
+  "lastChangelogVersion": "0.78.0"
 }

@@ -1,15 +1,1 @@
 #:schema https://developers.openai.com/codex/config-schema.json
-model = "qwen3.6"
-model_provider = "nan"
-
-[tui.model_availability_nux]
-"gpt-5.5" = 1
-
-model_context_window = 131072
-
-[model_providers.nan]
-name = "NaN"
-base_url = "https://api.nan.builders/v1"
-# Secret read from env at runtime (see shell/secrets.fish.example); never hardcode the token.
-env_key = "NAN_API_KEY"
-wire_api = "responses"

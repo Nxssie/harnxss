@@ -91,6 +91,7 @@ if $present_gemini;   then backup_then_link "$HARNXSS/tools/gemini/settings.json
 if $present_mise;     then backup_then_link "$HARNXSS/tools/mise/config.toml"         "$HOME/.config/mise/config.toml"; fi
 if $present_pi; then
   backup_then_link "$HARNXSS/tools/pi/settings.json"          "$HOME/.pi/agent/settings.json"
+  backup_then_link "$HARNXSS/tools/pi/APPEND_SYSTEM.md"       "$HOME/.pi/agent/APPEND_SYSTEM.md"
   backup_then_link "$HARNXSS/tools/pi/extensions/nan.ts"      "$HOME/.pi/agent/extensions/nan.ts"
 fi
 

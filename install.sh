@@ -51,11 +51,13 @@ present_opencode=false
 present_codex=false
 present_gemini=false
 present_mise=false
+present_pi=false
 if have claude   || [ -d "$HOME/.claude" ];          then present_claude=true; fi
 if have opencode || [ -d "$HOME/.config/opencode" ]; then present_opencode=true; fi
 if have codex    || [ -d "$HOME/.codex" ];           then present_codex=true; fi
 if have gemini   || [ -d "$HOME/.gemini" ];          then present_gemini=true; fi
 if have mise     || [ -d "$HOME/.config/mise" ];     then present_mise=true; fi
+if have pi       || [ -d "$HOME/.pi/agent" ];        then present_pi=true; fi
 
 AGENTS="$HARNXSS/agents/AGENTS.md"
 
@@ -68,6 +70,7 @@ if $present_codex;    then backup_then_link "$AGENTS" "$HOME/.codex/AGENTS.md"; 
 if $present_opencode; then backup_then_link "$AGENTS" "$HOME/.config/opencode/AGENTS.md"; fi
 if $present_claude;   then backup_then_link "$AGENTS" "$HOME/.claude/CLAUDE.md"; fi
 if $present_gemini;   then backup_then_link "$AGENTS" "$HOME/.gemini/GEMINI.md"; fi
+if $present_pi;       then backup_then_link "$AGENTS" "$HOME/.pi/agent/AGENTS.md"; fi
 
 # ── Tool configs (secrets externalized) ──────────────────────────────────────
 echo "tool configs:"
@@ -86,6 +89,10 @@ if $present_opencode; then backup_then_link "$HARNXSS/tools/opencode/opencode.js
 if $present_codex;    then backup_then_link "$HARNXSS/tools/codex/config.toml"       "$HOME/.codex/config.toml"; fi
 if $present_gemini;   then backup_then_link "$HARNXSS/tools/gemini/settings.json"    "$HOME/.gemini/settings.json"; fi
 if $present_mise;     then backup_then_link "$HARNXSS/tools/mise/config.toml"         "$HOME/.config/mise/config.toml"; fi
+if $present_pi; then
+  backup_then_link "$HARNXSS/tools/pi/settings.json"          "$HOME/.pi/agent/settings.json"
+  backup_then_link "$HARNXSS/tools/pi/extensions/nan.ts"      "$HOME/.pi/agent/extensions/nan.ts"
+fi
 
 # ── Skills (first-party) → each tool's skills dir ────────────────────────────
 echo "skills:"

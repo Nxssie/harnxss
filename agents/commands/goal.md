@@ -47,5 +47,4 @@ the user explicitly cancels.
 
 - Reading files, running build/test commands, creating non-sensitive files, editing code.
 - Installing dependencies or tools (within reason — ask if it's unusual or system-wide).
-- Committing changes (use `commit` skill).
 - Making reasonable architectural decisions consistent with the codebase's existing patterns.

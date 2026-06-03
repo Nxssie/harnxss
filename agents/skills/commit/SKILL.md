@@ -26,6 +26,8 @@ type(scope): short imperative description
 - Breaking change: add `!` after type/scope (`feat(api)!: ...`) and a `BREAKING CHANGE:` footer.
 
 ## Rules
+- Invoking this skill **is** the instruction to commit — commit directly, don't ask permission
+  again. Surface the message(s) first only when the grouping is genuinely ambiguous (step 4).
 - English, present imperative ("add", not "added"/"adds").
 - Never commit secrets or generated artifacts. If on a default branch, branch first.
 - Don't add co-author/footer trailers unless asked.

@@ -140,5 +140,19 @@ else
   echo "  created $secrets from template — FILL IN YOUR KEYS, then 'exec fish'"
 fi
 
+# ── harnxss TUI command (hn) ─────────────────────────────────────────────────
+echo "hn command:"
+if have bun; then
+  hn_fn="$HOME/.config/fish/functions/hn.fish"
+  cat > "$hn_fn" << EOF
+function hn --description 'harnxss TUI'
+    bun run "$HARNXSS/tools/tui/src/index.tsx" \$argv
+end
+EOF
+  echo "  created $hn_fn"
+else
+  echo "  skip    bun not found"
+fi
 echo
+
 echo "Done. Restart your AI tools (and 'exec fish') to pick up changes."

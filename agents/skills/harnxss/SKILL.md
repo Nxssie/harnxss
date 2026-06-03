@@ -25,9 +25,10 @@ agents/
    ```markdown
    ---
    name: <name>
-   description: <one-line trigger hint — when should the AI invoke this?>
+   description: "<one-line trigger hint — when should the AI invoke this?>"
    ---
    ```
+   Always **double-quote** the description — a `: ` or a leading special char breaks unquoted YAML.
 2. Write the skill body: workflow steps, rules, examples. Match the density of existing skills.
 3. Run `sh install.sh`.
 

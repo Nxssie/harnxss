@@ -3,10 +3,10 @@
 Centralized, self-owned configuration for my AI coding tools. This repo is the **single source of
 truth**: one canonical `AGENTS.md`, my skills, my commands, and each tool's config live here, and an
 installer symlinks them into the **global** config location of every tool. Clone on a new machine,
-run the installer, and Claude Code / OpenCode / Codex / Gemini are all configured identically.
+run the installer, and Claude Code / OpenCode / Codex / Pi / Gemini are all configured identically.
 
 > Philosophy: one versioned repo holds the real files; the symlinks point *out* into
-> `~/.claude`, `~/.config/opencode`, `~/.codex`, `~/.gemini`. Fully self-owned — no third-party
+> `~/.claude`, `~/.config/opencode`, `~/.codex`, `~/.pi/agent`, `~/.gemini`. Fully self-owned — no third-party
 > skill manager. **Agnostic by design**: encodes my languages and methodologies, never the content
 > or explicit stack of any specific project.
 
@@ -48,12 +48,16 @@ The installer only touches tools that are present, backs up any existing real fi
 | `agents/AGENTS.md`              | `~/.config/opencode/AGENTS.md`       |
 | `agents/AGENTS.md`              | `~/.claude/CLAUDE.md` (Claude has no AGENTS.md) |
 | `agents/AGENTS.md`              | `~/.gemini/GEMINI.md` (if present)   |
+| `agents/AGENTS.md`              | `~/.pi/agent/AGENTS.md` (if present) |
 | `tools/claude/settings.json`    | `~/.claude/settings.json`            |
 | `tools/opencode/opencode.json`  | `~/.config/opencode/opencode.json`   |
 | `tools/codex/config.toml`       | `~/.codex/config.toml`               |
 | `tools/gemini/settings.json`    | `~/.gemini/settings.json` (if present) |
 | `tools/mise/config.toml`        | `~/.config/mise/config.toml` (if present) |
-| `agents/skills/<name>`          | `~/.claude/skills/`, `~/.config/opencode/skill/`, `~/.codex/skills/` |
+| `tools/pi/settings.json`        | `~/.pi/agent/settings.json` (if present) |
+| `tools/pi/APPEND_SYSTEM.md`     | `~/.pi/agent/APPEND_SYSTEM.md` (if present) |
+| `tools/pi/extensions/*.ts`      | `~/.pi/agent/extensions/` (if present) |
+| `agents/skills/<name>`          | `~/.claude/skills/`, `~/.config/opencode/skill/`, `~/.codex/skills/`, `~/.pi/agent/skills/` |
 | `agents/commands/<name>.md`     | `~/.claude/commands/`, `~/.config/opencode/command/` |
 
 Only individual files/subdirs are linked — never the whole `~/.claude/` dir (it also holds runtime
@@ -64,11 +68,13 @@ state and credentials).
 - **Claude Code** reads `CLAUDE.md` only, so its global file is a symlink → `AGENTS.md`.
 - **Gemini** reads `GEMINI.md` by default; `tools/gemini/settings.json` sets `context.fileName` so it
   also reads `AGENTS.md`.
+- **Pi** reads `~/.pi/agent/AGENTS.md`, a symlink → `AGENTS.md`; `tools/pi/extensions/*.ts` are linked
+  into `~/.pi/agent/extensions/`.
 
 ## Secrets
 Real credentials never live in this repo. Configs reference env vars:
 - `opencode.json` → `"apiKey": "{env:NAN_API_KEY}"`
-- `codex/config.toml` → `env_key = "NAN_API_KEY"`
+- `pi/extensions/nan.ts` → `process.env.NAN_API_KEY`
 
 The real value lives only in `~/.config/fish/conf.d/secrets.fish` (gitignored, auto-sourced by fish).
 If `{env:}` ever fails for a custom OpenCode provider, switch that field to `"{file:~/.secrets/nan-key}"`.

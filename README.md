@@ -54,6 +54,7 @@ The installer only touches tools that are present, backs up any existing real fi
 | `tools/codex/config.toml`       | `~/.codex/config.toml`               |
 | `tools/gemini/settings.json`    | `~/.gemini/settings.json` (if present) |
 | `tools/mise/config.toml`        | `~/.config/mise/config.toml` (if present) |
+| `tools/nvim/`                   | `~/.config/nvim/` (if present)            |
 | `tools/pi/settings.json`        | `~/.pi/agent/settings.json` (if present) |
 | `tools/pi/APPEND_SYSTEM.md`     | `~/.pi/agent/APPEND_SYSTEM.md` (if present) |
 | `tools/pi/extensions/*.ts`      | `~/.pi/agent/extensions/` (if present) |

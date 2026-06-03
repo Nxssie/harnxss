@@ -14,3 +14,6 @@ auth.json
 
 # Tool deps / runtime state
 node_modules/
+
+# LazyVim writes this when using :LazyExtras UI — extras are declared in lazy.lua instead
+tools/nvim/lazyvim.json

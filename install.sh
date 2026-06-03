@@ -53,6 +53,7 @@ present_gemini=false
 present_mise=false
 present_pi=false
 present_droid=false
+present_nvim=false
 if have claude   || [ -d "$HOME/.claude" ];          then present_claude=true; fi
 if have opencode || [ -d "$HOME/.config/opencode" ]; then present_opencode=true; fi
 if have codex    || [ -d "$HOME/.codex" ];           then present_codex=true; fi
@@ -60,6 +61,7 @@ if have gemini   || [ -d "$HOME/.gemini" ];          then present_gemini=true; f
 if have mise     || [ -d "$HOME/.config/mise" ];     then present_mise=true; fi
 if have pi       || [ -d "$HOME/.pi/agent" ];        then present_pi=true; fi
 if have droid    || [ -d "$HOME/.factory" ];         then present_droid=true; fi
+if have nvim     || [ -d "$HOME/.config/nvim" ];     then present_nvim=true; fi
 
 AGENTS="$HARNXSS/agents/AGENTS.md"
 
@@ -100,6 +102,7 @@ if $present_opencode; then backup_then_link "$HARNXSS/tools/opencode/opencode.js
 if $present_codex;    then backup_then_link "$HARNXSS/tools/codex/config.toml"       "$HOME/.codex/config.toml"; fi
 if $present_gemini;   then backup_then_link "$HARNXSS/tools/gemini/settings.json"    "$HOME/.gemini/settings.json"; fi
 if $present_mise;     then backup_then_link "$HARNXSS/tools/mise/config.toml"         "$HOME/.config/mise/config.toml"; fi
+if $present_nvim;     then backup_then_link "$HARNXSS/tools/nvim"                     "$HOME/.config/nvim"; fi
 if $present_pi; then
   backup_then_link "$HARNXSS/tools/pi/settings.json"          "$HOME/.pi/agent/settings.json"
   backup_then_link "$HARNXSS/tools/pi/APPEND_SYSTEM.md"       "$HOME/.pi/agent/APPEND_SYSTEM.md"

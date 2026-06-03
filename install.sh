@@ -92,7 +92,10 @@ if $present_mise;     then backup_then_link "$HARNXSS/tools/mise/config.toml"   
 if $present_pi; then
   backup_then_link "$HARNXSS/tools/pi/settings.json"          "$HOME/.pi/agent/settings.json"
   backup_then_link "$HARNXSS/tools/pi/APPEND_SYSTEM.md"       "$HOME/.pi/agent/APPEND_SYSTEM.md"
-  backup_then_link "$HARNXSS/tools/pi/extensions/nan.ts"      "$HOME/.pi/agent/extensions/nan.ts"
+  for ext in "$HARNXSS"/tools/pi/extensions/*.ts; do
+    [ -f "$ext" ] || continue
+    backup_then_link "$ext" "$HOME/.pi/agent/extensions/$(basename "$ext")"
+  done
 fi
 
 # ── Skills (first-party) → each tool's skills dir ────────────────────────────

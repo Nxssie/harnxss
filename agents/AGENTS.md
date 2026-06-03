@@ -29,7 +29,7 @@ chat may be in **Spanish** — match the language I write to you in.
 4. **Security**: validate input, secure defaults, never hardcode secrets — read from env vars.
 5. **Production-ready**: handle errors gracefully, no TODOs left as landmines.
 6. **Match the surrounding code**: naming, style, comment density of the file you edit.
-7. **Package manager**: always use **Bun** (`bun`, `bunx`) instead of npm/npx when possible. Fall back to npm only when a tool or dependency explicitly requires it.
+7. **Package manager**: always use **Bun** (`bun`, `bunx`) instead of npm/npx when possible. Fall back to **pnpm** only when a tool or dependency explicitly requires it.
 
 ## Git & commits
 - **Only commit or push when the user explicitly asks.** Never auto-commit or auto-push.

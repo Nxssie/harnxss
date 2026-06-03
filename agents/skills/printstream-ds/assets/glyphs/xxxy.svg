@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 40" fill="none">
+  
+  <g font-family="&#39;Space Grotesk&#39;, system-ui, sans-serif" font-weight="700" font-size="44" letter-spacing="-2" fill="currentColor">
+    <text x="0" y="34">X</text>
+    <text x="36" y="34">X</text>
+    <text x="72" y="34" opacity=".45">X</text>
+    <text x="108" y="34">Y</text>
+  </g>
+</svg>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<title>Mono core</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html,body{margin:0;padding:0;background:var(--ps-bg-card);}
+  .row{display:flex;height:150px;}
+  .sw{flex:1;display:flex;flex-direction:column;justify-content:flex-end;padding:10px 12px;box-sizing:border-box;border-right:1px solid rgba(0,0,0,.08);}
+  .sw:last-child{border-right:0;}
+  .name{font-family:var(--ps-font-mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;}
+  .hex{font-family:var(--ps-font-mono);font-size:10px;opacity:.6;}
+  /* light swatches get dark text; dark ones get light text */
+  .light{color:#111;}
+  .dark{color:#fff;}
+</style></head>
+<body>
+<div class="row">
+  <div class="sw light" style="background:var(--ps-white)"><div class="name">white</div><div class="hex">#FFFFFF</div></div>
+  <div class="sw light" style="background:var(--ps-paper)"><div class="name">paper</div><div class="hex">#F4F4F2</div></div>
+  <div class="sw light" style="background:var(--ps-pearl-100)"><div class="name">pearl-100</div><div class="hex">#EDEDEF</div></div>
+  <div class="sw light" style="background:var(--ps-pearl-200)"><div class="name">pearl-200</div><div class="hex">#DDDDE1</div></div>
+  <div class="sw light" style="background:var(--ps-pearl-300)"><div class="name">pearl-300</div><div class="hex">#C3C3C8</div></div>
+  <div class="sw dark" style="background:var(--ps-steel-400)"><div class="name">steel-400</div><div class="hex">#8A8A90</div></div>
+  <div class="sw dark" style="background:var(--ps-steel-500)"><div class="name">steel-500</div><div class="hex">#5A5A62</div></div>
+  <div class="sw dark" style="background:var(--ps-graphite-600)"><div class="name">graphite-600</div><div class="hex">#2F2F36</div></div>
+  <div class="sw dark" style="background:var(--ps-graphite-700)"><div class="name">graphite-700</div><div class="hex">#1A1A1F</div></div>
+  <div class="sw dark" style="background:var(--ps-ink-800)"><div class="name">ink-800</div><div class="hex">#0D0D11</div></div>
+  <div class="sw dark" style="background:var(--ps-ink-900)"><div class="name">ink-900</div><div class="hex">#050507</div></div>
+</div>
+</body></html>

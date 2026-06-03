@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html,body{margin:0;padding:0;background:var(--ps-bg-card);font-family:var(--ps-font-body);color:#000;}
+  .wrap{padding:0;height:150px;box-sizing:border-box;display:flex;}
+  .side{width:60px;background:var(--ps-ink-900);color:#fff;display:flex;flex-direction:column;align-items:center;padding:12px 0;gap:14px;}
+  .side img{width:24px;height:24px;filter:invert(1);}
+  .side .n{font-family:var(--ps-font-mono);font-size:9px;letter-spacing:.1em;color:var(--ps-pearl-300);writing-mode:vertical-rl;transform:rotate(180deg);margin-top:auto;}
+  .main{flex:1;padding:16px 20px;display:flex;flex-direction:column;gap:8px;}
+  .hdr{display:flex;justify-content:space-between;align-items:center;font-family:var(--ps-font-mono);font-size:10px;letter-spacing:.12em;color:var(--ps-fg-4);}
+  .title{font-family:var(--ps-font-display);font-weight:700;font-size:22px;letter-spacing:-.02em;line-height:1;}
+  .kv{display:grid;grid-template-columns:80px 1fr;gap:4px 14px;font-family:var(--ps-font-mono);font-size:11px;}
+  .kv .k{color:var(--ps-fg-4);letter-spacing:.06em;}
+  .kv .v{color:#000;}
+  .bar{height:3px;background:var(--ps-pearl-gradient);margin-top:auto;}
+</style></head>
+<body>
+<div class="wrap">
+  <div class="side">
+    <img src="../assets/logomark.svg">
+    <div class="n">PRINTSTREAM</div>
+  </div>
+  <div class="main">
+    <div class="hdr"><span>///module;</span><span>B11;</span></div>
+    <div class="title">XXXY / RX-04</div>
+    <div class="kv">
+      <span class="k">_rev;</span><span class="v">B</span>
+      <span class="k">_tol;</span><span class="v">0.02mm</span>
+      <span class="k">_serial;</span><span class="v">0472-B11-2026</span>
+    </div>
+    <div class="bar"></div>
+  </div>
+</div>
+</body></html>

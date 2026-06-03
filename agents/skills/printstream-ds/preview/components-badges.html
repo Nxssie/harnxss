@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html,body{margin:0;padding:0;background:var(--ps-bg-card);font-family:var(--ps-font-body);}
+  .wrap{padding:22px;height:150px;box-sizing:border-box;display:flex;flex-wrap:wrap;gap:10px;align-items:center;}
+  .chip{font-family:var(--ps-font-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding:5px 10px;border:1px solid #000;display:inline-flex;align-items:center;gap:6px;}
+  .chip .dot{width:6px;height:6px;background:currentColor;}
+  .pill{border-radius:999px;padding:5px 12px;}
+  .ok{color:var(--ps-signal-ok);border-color:currentColor;}
+  .warn{color:var(--ps-signal-caution);border-color:currentColor;}
+  .err{color:var(--ps-signal-danger);border-color:currentColor;}
+  .dk{background:#000;color:#fff;border-color:#000;}
+  .barcode{display:inline-flex;align-items:center;gap:8px;padding:4px 10px;border:1px solid rgba(0,0,0,.12);border-radius:999px;}
+  .bc{height:12px;width:60px;background-image:repeating-linear-gradient(90deg,#000 0 2px,transparent 2px 4px,#000 4px 5px,transparent 5px 9px);}
+  .bc-label{font-family:var(--ps-font-mono);font-size:10px;letter-spacing:.14em;}
+</style></head>
+<body>
+<div class="wrap">
+  <span class="chip"><span class="dot"></span>B11;</span>
+  <span class="chip pill">_rev.B;</span>
+  <span class="chip dk">XXXY;</span>
+  <span class="chip ok"><span class="dot"></span>_calibrated;</span>
+  <span class="chip warn"><span class="dot"></span>_drift;</span>
+  <span class="chip err"><span class="dot"></span>_err_01;</span>
+  <span class="barcode"><span class="bc"></span><span class="bc-label">0472;</span></span>
+</div>
+</body></html>

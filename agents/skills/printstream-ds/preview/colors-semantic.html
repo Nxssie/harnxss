@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<title>Signals</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html,body{margin:0;padding:0;background:var(--ps-bg-card);font-family:var(--ps-font-body);}
+  .wrap{padding:22px 24px;height:150px;box-sizing:border-box;display:flex;gap:16px;align-items:center;}
+  .card{flex:1;border:1px solid rgba(0,0,0,.1);padding:14px;display:flex;flex-direction:column;gap:8px;}
+  .dot{width:14px;height:14px;border-radius:999px;}
+  .code{font-family:var(--ps-font-mono);font-size:11px;letter-spacing:.02em;}
+  .name{font-family:var(--ps-font-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ps-fg-4);}
+  .hex{font-family:var(--ps-font-mono);font-size:10px;opacity:.55;}
+</style></head>
+<body>
+<div class="wrap">
+  <div class="card"><div class="dot" style="background:var(--ps-signal-ok)"></div><div class="name">signal / ok</div><div class="code">_calibrated;</div><div class="hex">#7FA58A</div></div>
+  <div class="card"><div class="dot" style="background:var(--ps-signal-caution)"></div><div class="name">signal / caution</div><div class="code">_drift_detected;</div><div class="hex">#E8D26B</div></div>
+  <div class="card"><div class="dot" style="background:var(--ps-signal-danger)"></div><div class="name">signal / danger</div><div class="code">ERR_01;</div><div class="hex">#D2644D</div></div>
+</div>
+</body></html>

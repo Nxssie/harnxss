@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html,body{margin:0;padding:0;background:var(--ps-bg-card);font-family:var(--ps-font-body);}
+  .wrap{padding:14px 22px;height:150px;box-sizing:border-box;display:flex;flex-direction:column;gap:10px;}
+  .eyebrow{font-family:var(--ps-font-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ps-fg-4);}
+  .bc{height:36px;background-image:repeating-linear-gradient(90deg,#000 0 2px,transparent 2px 4px,#000 4px 5px,transparent 5px 9px,#000 9px 10px,transparent 10px 14px,#000 14px 17px,transparent 17px 20px);}
+  .bc-sm{height:16px;width:180px;background-image:repeating-linear-gradient(90deg,#000 0 2px,transparent 2px 4px,#000 4px 5px,transparent 5px 9px);}
+  .shim{height:4px;background:var(--ps-pearl-gradient);background-size:200% 100%;animation:sh 6s linear infinite;}
+  @keyframes sh{from{background-position:0 0}to{background-position:200% 0}}
+  .row{display:flex;align-items:center;gap:14px;font-family:var(--ps-font-mono);font-size:10px;letter-spacing:.14em;color:var(--ps-fg-4);}
+  .code{color:#000;}
+</style></head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">_barcode / shimmer_stripes;</div>
+  <div class="bc"></div>
+  <div class="row"><span class="bc-sm"></span><span class="code">0472;</span><span>///rev.B;</span></div>
+  <div class="shim"></div>
+</div>
+</body></html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<title>Spacing</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html,body{margin:0;padding:0;background:var(--ps-bg-card);color:var(--ps-fg-1);}
+  .wrap{padding:18px 22px;height:150px;box-sizing:border-box;display:flex;flex-direction:column;gap:12px;}
+  .eyebrow{font-family:var(--ps-font-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ps-fg-4);}
+  .row{display:flex;align-items:flex-end;gap:10px;}
+  .step{display:flex;flex-direction:column;align-items:center;gap:4px;}
+  .bar{background:var(--ps-ink-900);}
+  .lbl{font-family:var(--ps-font-mono);font-size:9px;color:var(--ps-fg-4);letter-spacing:.04em;}
+</style></head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">_spacing / 4px_base;</div>
+  <div class="row">
+    <div class="step"><div class="bar" style="width:2px;height:40px"></div><div class="lbl">1 · 2</div></div>
+    <div class="step"><div class="bar" style="width:4px;height:40px"></div><div class="lbl">2 · 4</div></div>
+    <div class="step"><div class="bar" style="width:8px;height:40px"></div><div class="lbl">3 · 8</div></div>
+    <div class="step"><div class="bar" style="width:12px;height:40px"></div><div class="lbl">4 · 12</div></div>
+    <div class="step"><div class="bar" style="width:16px;height:40px"></div><div class="lbl">5 · 16</div></div>
+    <div class="step"><div class="bar" style="width:24px;height:40px"></div><div class="lbl">6 · 24</div></div>
+    <div class="step"><div class="bar" style="width:32px;height:40px"></div><div class="lbl">7 · 32</div></div>
+    <div class="step"><div class="bar" style="width:48px;height:40px"></div><div class="lbl">8 · 48</div></div>
+    <div class="step"><div class="bar" style="width:64px;height:40px"></div><div class="lbl">9 · 64</div></div>
+    <div class="step"><div class="bar" style="width:96px;height:40px"></div><div class="lbl">10 · 96</div></div>
+  </div>
+</div>
+</body></html>

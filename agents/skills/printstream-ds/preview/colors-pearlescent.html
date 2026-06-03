@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<title>Pearlescent</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html,body{margin:0;padding:0;background:var(--ps-bg-card);font-family:var(--ps-font-body);}
+  .wrap{padding:18px 22px;height:150px;box-sizing:border-box;display:flex;flex-direction:column;gap:14px;}
+  .eyebrow{font-family:var(--ps-font-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ps-fg-4);}
+  .sws{display:flex;gap:10px;}
+  .sw{flex:1;padding:12px;border:1px solid rgba(0,0,0,.08);}
+  .sw .chip{height:32px;}
+  .sw .name{font-family:var(--ps-font-mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;margin-top:6px;}
+  .sw .hex{font-family:var(--ps-font-mono);font-size:9px;opacity:.55;}
+  .bar{height:10px;background:var(--ps-pearl-gradient);background-size:200% 100%;animation:shim 6s linear infinite;}
+  @keyframes shim{from{background-position:0 0}to{background-position:200% 0}}
+  .inline{display:flex;align-items:center;gap:10px;}
+  .inline .lbl{font-family:var(--ps-font-mono);font-size:10px;color:var(--ps-fg-4);}
+  .inline .bar{flex:1;}
+</style></head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">_pearlescent_accents;</div>
+  <div class="sws">
+    <div class="sw"><div class="chip" style="background:#B6E8F2"></div><div class="name">iris/cyan</div><div class="hex">#B6E8F2</div></div>
+    <div class="sw"><div class="chip" style="background:#D5C9F0"></div><div class="name">iris/lilac</div><div class="hex">#D5C9F0</div></div>
+    <div class="sw"><div class="chip" style="background:#F2C9DA"></div><div class="name">iris/rose</div><div class="hex">#F2C9DA</div></div>
+    <div class="sw"><div class="chip" style="background:#CFE9DB"></div><div class="name">iris/mint</div><div class="hex">#CFE9DB</div></div>
+  </div>
+  <div class="inline"><span class="lbl">gradient;</span><div class="bar"></div></div>
+</div>
+</body></html>

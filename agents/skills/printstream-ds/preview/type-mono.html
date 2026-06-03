@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<title>Mono type</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html,body{margin:0;padding:0;background:var(--ps-bg-card);color:var(--ps-fg-1);}
+  .wrap{padding:18px 22px;height:150px;box-sizing:border-box;display:flex;flex-direction:column;gap:10px;}
+  .eyebrow{font-family:var(--ps-font-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ps-fg-4);}
+  .row{display:flex;gap:20px;align-items:baseline;}
+  .row .lbl{font-family:var(--ps-font-mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--ps-fg-4);width:120px;flex:none;}
+  .ex{font-family:var(--ps-font-mono);font-size:14px;}
+  .em{font-family:var(--ps-font-mono);font-size:13px;color:var(--ps-fg-2);}
+  .tag{font-family:var(--ps-font-mono);font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;}
+  .meta{font-family:var(--ps-font-mono);font-size:11px;color:var(--ps-fg-4);letter-spacing:.02em;}
+</style></head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">_mono_treatments;</div>
+  <div class="row"><div class="lbl">code_label</div><div class="em">_noise_disabled;</div></div>
+  <div class="row"><div class="lbl">directive</div><div class="em">///handle_with_care;</div></div>
+  <div class="row"><div class="lbl">ticker_code</div><div class="tag">B11;  B15;  B45;</div></div>
+  <div class="row"><div class="lbl">numeric</div><div class="meta">REV.B · 04/∞ · 0.35ms · Δ 0.02mm</div></div>
+  <div class="row"><div class="lbl">error</div><div class="ex" style="color:var(--ps-signal-danger)">ERR_01: handshake_rejected;</div></div>
+</div>
+</body></html>

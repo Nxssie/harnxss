@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html,body{margin:0;padding:0;background:var(--ps-bg-card);font-family:var(--ps-font-body);}
+  .wrap{padding:18px 22px;height:150px;box-sizing:border-box;display:flex;gap:24px;align-items:center;}
+  .demo{position:relative;padding:22px 26px;border:1px dashed rgba(0,0,0,.2);font-family:var(--ps-font-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ps-fg-3);}
+  .c{position:absolute;width:10px;height:10px;border:1px solid #000;}
+  .c.tl{top:-2px;left:-2px;border-right:0;border-bottom:0;}
+  .c.tr{top:-2px;right:-2px;border-left:0;border-bottom:0;}
+  .c.bl{bottom:-2px;left:-2px;border-right:0;border-top:0;}
+  .c.br{bottom:-2px;right:-2px;border-left:0;border-top:0;}
+  .right{display:flex;flex-direction:column;gap:10px;font-family:var(--ps-font-mono);font-size:11px;letter-spacing:.08em;color:var(--ps-fg-3);}
+  .right b{font-weight:600;color:#000;}
+</style></head>
+<body>
+<div class="wrap">
+  <div class="demo">
+    <span class="c tl"></span><span class="c tr"></span><span class="c bl"></span><span class="c br"></span>
+    _reticle_wrap;
+  </div>
+  <div class="demo" style="border:1px solid #000;background:var(--ps-ink-900);color:var(--ps-pearl-200);">
+    <span class="c tl" style="border-color:#fff"></span>
+    <span class="c tr" style="border-color:#fff"></span>
+    <span class="c bl" style="border-color:#fff"></span>
+    <span class="c br" style="border-color:#fff"></span>
+    _focus_state;
+  </div>
+  <div class="right">
+    <div><b>·</b> corner ticks = focus</div>
+    <div><b>·</b> use on cards, inputs, modals</div>
+    <div><b>·</b> 10×10px · 1px stroke</div>
+  </div>
+</div>
+</body></html>

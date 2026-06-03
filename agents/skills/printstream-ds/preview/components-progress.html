@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html,body{margin:0;padding:0;background:var(--ps-bg-card);font-family:var(--ps-font-body);color:#000;}
+  .wrap{padding:18px 22px;height:150px;box-sizing:border-box;display:flex;flex-direction:column;gap:14px;}
+  .row{display:flex;align-items:center;gap:14px;}
+  .lbl{font-family:var(--ps-font-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ps-fg-4);width:100px;flex:none;}
+  /* Progress */
+  .track{flex:1;height:6px;background:var(--ps-pearl-100);border:1px solid rgba(0,0,0,.15);position:relative;}
+  .fill{position:absolute;inset:0;width:62%;background:var(--ps-ink-900);}
+  .fill.shim{background:var(--ps-pearl-gradient);background-size:200% 100%;animation:sh 4s linear infinite;width:40%;}
+  @keyframes sh{from{background-position:0 0}to{background-position:200% 0}}
+  .val{font-family:var(--ps-font-mono);font-size:11px;letter-spacing:.02em;}
+  /* Slider */
+  .srange{flex:1;height:2px;background:#000;position:relative;}
+  .srange::before{content:"";position:absolute;left:35%;top:-6px;width:2px;height:14px;background:#000;}
+  .srange::after{content:"";position:absolute;left:0;right:65%;top:-1px;height:4px;background:var(--ps-pearl-gradient);}
+  .ticks{display:flex;justify-content:space-between;font-family:var(--ps-font-mono);font-size:9px;color:var(--ps-fg-4);letter-spacing:.06em;}
+</style></head>
+<body>
+<div class="wrap">
+  <div class="row"><div class="lbl">_progress;</div><div class="track"><div class="fill"></div></div><div class="val">62%</div></div>
+  <div class="row"><div class="lbl">_streaming;</div><div class="track"><div class="fill shim"></div></div><div class="val">0.35ms</div></div>
+  <div class="row"><div class="lbl">_tolerance;</div><div class="srange"></div><div class="val">Δ 0.02</div></div>
+  <div class="row" style="padding-left:110px"><div class="ticks" style="flex:1"><span>0.00</span><span>0.25</span><span>0.50</span><span>0.75</span><span>1.00</span></div></div>
+</div>
+</body></html>

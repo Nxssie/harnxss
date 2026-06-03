@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html,body{margin:0;padding:0;background:var(--ps-paper);font-family:var(--ps-font-body);}
+  .wrap{padding:18px 22px;height:150px;box-sizing:border-box;display:flex;gap:14px;}
+  .card{flex:1;background:#fff;border:1px solid rgba(0,0,0,.08);box-shadow:var(--ps-shadow-card);padding:14px;display:flex;flex-direction:column;gap:8px;position:relative;}
+  .hdr{display:flex;justify-content:space-between;align-items:center;}
+  .ticker{font-family:var(--ps-font-mono);font-size:10px;letter-spacing:.06em;color:var(--ps-fg-4);}
+  .tag{font-family:var(--ps-font-mono);font-size:10px;letter-spacing:.14em;font-weight:600;}
+  .name{font-family:var(--ps-font-display);font-weight:700;font-size:22px;letter-spacing:-.02em;line-height:1;}
+  .body{font-family:var(--ps-font-mono);font-size:11px;color:var(--ps-fg-3);line-height:1.5;}
+  .bar{position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--ps-pearl-gradient);}
+  .barcode{height:18px;background-image:repeating-linear-gradient(90deg,#000 0 2px,transparent 2px 4px,#000 4px 5px,transparent 5px 9px);}
+</style></head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <div class="hdr"><div class="ticker">_module;</div><div class="tag">B11;</div></div>
+    <div class="name">XXXY</div>
+    <div class="body">///handle_with_care;<br>tolerance 0.02mm</div>
+    <div class="bar"></div>
+  </div>
+  <div class="card">
+    <div class="hdr"><div class="ticker">_module;</div><div class="tag">B15;</div></div>
+    <div class="name">RX-04</div>
+    <div class="barcode"></div>
+    <div class="body">rev.B · 04/∞</div>
+  </div>
+  <div class="card" style="background:var(--ps-ink-900);color:#fff;border-color:#000;">
+    <div class="hdr"><div class="ticker" style="color:var(--ps-pearl-300)">_module;</div><div class="tag" style="color:#fff">B45;</div></div>
+    <div class="name" style="color:#fff">—scope_</div>
+    <div class="body" style="color:var(--ps-pearl-300)">_steady_aim; 0.35ms</div>
+    <div class="bar"></div>
+  </div>
+</div>
+</body></html>

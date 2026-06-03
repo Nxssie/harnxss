@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<title>Elevation</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html,body{margin:0;padding:0;background:var(--ps-paper);color:var(--ps-fg-1);}
+  .wrap{padding:26px 24px;height:150px;box-sizing:border-box;display:flex;gap:20px;align-items:flex-start;}
+  .item{display:flex;flex-direction:column;align-items:center;gap:8px;}
+  .chip{width:96px;height:64px;background:var(--ps-white);display:flex;align-items:center;justify-content:center;font-family:var(--ps-font-mono);font-size:10px;color:var(--ps-fg-4);letter-spacing:.08em;}
+  .lbl{font-family:var(--ps-font-mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--ps-fg-4);}
+</style></head>
+<body>
+<div class="wrap">
+  <div class="item"><div class="chip" style="box-shadow:var(--ps-shadow-hair)">hair</div><div class="lbl">hairline</div></div>
+  <div class="item"><div class="chip" style="box-shadow:var(--ps-shadow-etch)">etch</div><div class="lbl">etched</div></div>
+  <div class="item"><div class="chip" style="box-shadow:var(--ps-shadow-card)">card</div><div class="lbl">card</div></div>
+  <div class="item"><div class="chip" style="box-shadow:var(--ps-shadow-float)">float</div><div class="lbl">floating</div></div>
+  <div class="item"><div class="chip" style="box-shadow:var(--ps-shadow-deep)">deep</div><div class="lbl">deep · modal</div></div>
+</div>
+</body></html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<title>Type families</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html,body{margin:0;padding:0;background:var(--ps-bg-card);color:var(--ps-fg-1);}
+  .wrap{padding:14px 22px;height:150px;box-sizing:border-box;display:flex;flex-direction:column;gap:10px;}
+  .row{display:flex;gap:16px;align-items:baseline;border-bottom:1px solid rgba(0,0,0,.08);padding-bottom:8px;}
+  .row:last-child{border-bottom:0;}
+  .tag{font-family:var(--ps-font-mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--ps-fg-4);width:120px;flex:none;}
+  .meta{font-family:var(--ps-font-mono);font-size:9px;color:var(--ps-fg-4);margin-left:auto;}
+</style></head>
+<body>
+<div class="wrap">
+  <div class="row">
+    <div class="tag">display</div>
+    <div style="font-family:var(--ps-font-display);font-weight:700;font-size:28px;letter-spacing:-.02em;line-height:1;">XXXY / B15</div>
+    <div class="meta">Space Grotesk · 500–700</div>
+  </div>
+  <div class="row">
+    <div class="tag">body</div>
+    <div style="font-family:var(--ps-font-body);font-size:18px;">The quick brown fox jumps over 13 lazy dogs.</div>
+    <div class="meta">Inter Tight · 300–700</div>
+  </div>
+  <div class="row">
+    <div class="tag">mono</div>
+    <div style="font-family:var(--ps-font-mono);font-size:14px;">_steady_aim; // handle_with_care;</div>
+    <div class="meta">JetBrains Mono · 300–700</div>
+  </div>
+</div>
+</body></html>

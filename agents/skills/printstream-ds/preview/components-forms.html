@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><link rel="stylesheet" href="../colors_and_type.css">
+<template id="__bundler_thumbnail" data-bg-color="#FFFFFF">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#FFFFFF"/>
+    <g transform="translate(420,310)" fill="#050507">
+      <rect x="0" y="0" width="160" height="80" stroke="#050507" stroke-width="6" fill="#DDDDE1"/>
+      <rect x="80" y="0" width="80" height="80" fill="#050507"/>
+      <rect x="220" y="0" width="80" height="80" stroke="#050507" stroke-width="6" fill="#050507"/>
+      <path d="M238 42 L258 62 L290 26" stroke="#FFFFFF" stroke-width="8" fill="none"/>
+    </g>
+    <text x="600" y="500" text-anchor="middle" font-family="monospace" font-size="28" fill="#050507" letter-spacing="4">_FORMS;</text>
+  </svg>
+</template>
+<style>
+  html,body{margin:0;padding:0;background:var(--ps-bg-card);font-family:var(--ps-font-body);}
+  .wrap{padding:18px 22px;height:150px;box-sizing:border-box;display:flex;gap:18px;}
+  .col{flex:1;display:flex;flex-direction:column;gap:10px;}
+  label{font-family:var(--ps-font-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ps-fg-4);}
+  input,select{font-family:var(--ps-font-mono);font-size:13px;padding:9px 12px;border:1px solid rgba(0,0,0,.2);background:#fff;color:#000;}
+  input:focus{outline:none;border-color:#000;box-shadow:0 2px 0 var(--ps-iris-lilac);}
+  .field{display:flex;flex-direction:column;gap:6px;}
+  .hint{font-family:var(--ps-font-mono);font-size:9px;color:var(--ps-fg-4);letter-spacing:.06em;}
+
+  /* Toggle rows: fixed control slot + aligned label column */
+  .toggle{
+    display:grid;
+    grid-template-columns: 36px 1fr;
+    align-items:center;
+    gap:12px;
+    font-family:var(--ps-font-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+    min-height:18px;
+  }
+  .ctrl{display:flex;align-items:center;justify-content:flex-start;}
+
+  /* Switch: 32×16 */
+  .sw{width:32px;height:16px;background:var(--ps-pearl-200);position:relative;border:1px solid #000;box-sizing:content-box;}
+  .sw::after{content:"";position:absolute;top:0;left:0;width:14px;height:14px;background:#000;transition:all .2s;}
+  .sw.on{background:var(--ps-ink-900);}
+  .sw.on::after{left:16px;background:#fff;}
+
+  /* Checkbox: 16×16 (match switch height for vertical rhythm) */
+  .chk{width:16px;height:16px;border:1px solid #000;display:inline-flex;align-items:center;justify-content:center;box-sizing:content-box;}
+  .chk.on{background:#000;color:#fff;font-size:11px;line-height:1;}
+</style></head>
+<body>
+<div class="wrap">
+  <div class="col">
+    <div class="field">
+      <label>_serial_number;</label>
+      <input value="B11-0472-REV.B">
+      <div class="hint">// 12 chars required;</div>
+    </div>
+  </div>
+  <div class="col">
+    <div class="toggle"><span class="ctrl"><span class="sw on"></span></span><span>_noise_disabled;</span></div>
+    <div class="toggle"><span class="ctrl"><span class="sw"></span></span><span>_steady_aim;</span></div>
+    <div class="toggle"><span class="ctrl"><span class="chk on">✓</span></span><span>///handle_with_care;</span></div>
+    <div class="toggle"><span class="ctrl"><span class="chk"></span></span><span>_auto_calibrate;</span></div>
+  </div>
+</div>
+</body></html>

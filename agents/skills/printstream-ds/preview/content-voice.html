@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html,body{margin:0;padding:0;background:var(--ps-bg-card);font-family:var(--ps-font-body);}
+  .wrap{padding:14px 22px;height:150px;box-sizing:border-box;display:flex;flex-direction:column;gap:10px;}
+  .row{display:flex;align-items:center;gap:12px;}
+  .box{border:1px solid rgba(0,0,0,.12);padding:10px 14px;flex:1;font-family:var(--ps-font-mono);font-size:12px;}
+  .m{color:var(--ps-fg-4);margin-right:6px;}
+  .em{color:#000;font-weight:500;}
+  .err{color:var(--ps-signal-danger);}
+  .ok{color:var(--ps-signal-ok);}
+  .warn{color:var(--ps-signal-caution);}
+  .cmd{background:var(--ps-ink-900);color:#fff;padding:10px 14px;font-family:var(--ps-font-mono);font-size:12px;display:flex;align-items:center;gap:8px;}
+  .cmd::before{content:"$";color:var(--ps-pearl-300);}
+  .cursor{display:inline-block;width:6px;height:12px;background:#fff;animation:bl 1s steps(2,end) infinite;margin-left:4px;}
+  @keyframes bl{50%{opacity:0}}
+</style></head>
+<body>
+<div class="wrap">
+  <div class="row">
+    <div class="box"><span class="m">//</span><span class="em">calibration_complete;</span></div>
+    <div class="box"><span class="m">ERR_01:</span><span class="err">handshake_rejected;</span></div>
+  </div>
+  <div class="row">
+    <div class="box"><span class="m">_status:</span><span class="ok">ok;</span> <span class="m">&nbsp;tol Δ 0.02mm</span></div>
+    <div class="box"><span class="m">_drift:</span><span class="warn">+0.18mm;</span></div>
+  </div>
+  <div class="cmd">stream --module=B11 --rev=B<span class="cursor"></span></div>
+</div>
+</body></html>

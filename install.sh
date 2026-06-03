@@ -52,16 +52,27 @@ present_codex=false
 present_gemini=false
 present_mise=false
 present_pi=false
+present_droid=false
 if have claude   || [ -d "$HOME/.claude" ];          then present_claude=true; fi
 if have opencode || [ -d "$HOME/.config/opencode" ]; then present_opencode=true; fi
 if have codex    || [ -d "$HOME/.codex" ];           then present_codex=true; fi
 if have gemini   || [ -d "$HOME/.gemini" ];          then present_gemini=true; fi
 if have mise     || [ -d "$HOME/.config/mise" ];     then present_mise=true; fi
 if have pi       || [ -d "$HOME/.pi/agent" ];        then present_pi=true; fi
+if have droid    || [ -d "$HOME/.factory" ];         then present_droid=true; fi
 
 AGENTS="$HARNXSS/agents/AGENTS.md"
 
 echo "AI-hub install from: $HARNXSS"
+echo
+
+# ── NaN model codegen (source of truth → opencode + pi + factory) ────────────
+echo "nan models:"
+if have bun; then
+  bun run "$HARNXSS/tools/nan/gen.ts"
+else
+  echo "  skip    bun not found — opencode.json, nan.ts, and factory settings NOT regenerated"
+fi
 echo
 
 # ── Canonical AGENTS.md → each tool's instruction file ───────────────────────

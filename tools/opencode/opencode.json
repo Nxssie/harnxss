@@ -3,14 +3,14 @@
   "provider": {
     "nan": {
       "models": {
-        "deepseek-v4-flash": {
-          "name": "DeepSeek V4 Flash 284B A13B"
+        "qwen3.6": {
+          "name": "Qwen 3.6 35B A3B"
         },
         "gemma4": {
           "name": "Gemma 4 26B A4B"
         },
-        "qwen3.6": {
-          "name": "Qwen 3.6 35B A3B"
+        "deepseek-v4-flash": {
+          "name": "DeepSeek V4 Flash 284B A13B"
         }
       },
       "name": "NaN",

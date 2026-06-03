@@ -11,6 +11,9 @@
         },
         "deepseek-v4-flash": {
           "name": "DeepSeek V4 Flash 284B A13B"
+        },
+        "mimo-v2.5": {
+          "name": "Xiaomi MiMo V2.5 310B A15B"
         }
       },
       "name": "NaN",

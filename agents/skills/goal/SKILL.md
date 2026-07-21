@@ -1,47 +1,62 @@
 ---
 name: goal
-description: "Persistent task execution mode — given a final objective, work toward it tenaciously until done. Ask clarifying questions when stuck, adopt quality-of-life guardrails. Invoke via /skill:goal when starting a complex or open-ended task."
+description: "Complete feature loop — given an objective, plan, implement, verify, and self-review autonomously until done. One command, minimal interruptions: ask only when ambiguous or destructive. Invoke via /skill:goal when starting a complex or open-ended task."
 ---
 
 # /goal
 
-Inspired by Claude Code's `/goal`. Given a final objective, drive toward completion with
-persistence, clarity, and production discipline. Do not stop until the objective is met or
-the user explicitly cancels.
+Inspired by Claude Code's `/goal`. Full autonomous feature loop:
+**understand → plan → execute → verify → review → present**. One command, no hand-holding —
+the user kicks it off and judges the result. Do not stop until the acceptance criteria are
+met or the user explicitly cancels.
 
-## Behavior
+## The loop
 
-1. **Parse & plan**: interpret the objective, break it into concrete steps. Ask clarifying
-   questions immediately if the goal is ambiguous, the scope is unclear, or external context
-   (project, environment, constraints) is missing.
+1. **Understand & define done**: parse the objective and derive explicit acceptance criteria
+   (what must work, what must not break). If the goal is ambiguous or references unknown
+   context, ask sharp questions now — never guess on intent.
 
-2. **Autonomous execution**: work step by step without asking for permission on each action.
-   Read relevant files, explore the project structure, run commands, and make changes.
+2. **Plan**: break the objective into concrete ordered steps and state them briefly (what
+   changes, where, why). If the plan involves breaking changes or an unconventional approach,
+   get one confirmation here — this is the only planned checkpoint. Otherwise start
+   immediately.
 
-3. **Persistence**: if a step fails or hits an error, diagnose and attempt a fix up to 3 times
-   before asking the user. If the approach is clearly wrong, reassess and pivot rather than
-   repeating the same failing strategy — report what changed and why.
+3. **Execute**: work through the steps without asking permission per action. Read files,
+   explore the project, run commands, edit code. Keep changes focused on the objective; flag
+   out-of-scope tangents instead of doing them. Report progress compactly (step X of Y) so
+   the user can follow or steer — a mid-flight user message is a plan correction, not an
+   interruption.
 
-4. **Quality-of-life guardrails**:
-   - Before making breaking changes (destructive commands, renames, refactors that touch many
-     files), **briefly summarize intent and ask for confirmation**.
-   - Before pushing to a remote or deploying, **summarize what's about to happen and confirm**.
-   - Never auto-commit or auto-push. If the objective produces meaningful change sets, suggest
-     the user commit when ready — do not do it yourself.
-   - Never hardcode secrets; reference `{env:VAR}` or `${VAR}`.
-   - Run the project's build + tests after significant changes and fix any regressions.
-   - Keep changes focused on the objective; flag out-of-scope tangents.
-   - If you're about to exceed context limits or get confused by scope creep, flag it and ask
-     the user to narrow the goal or start a new session.
+4. **Verify**: after significant changes, run the project's build, tests, and linter. On
+   failure, diagnose and retry up to 3 times; if the approach is clearly wrong, pivot and
+   report what changed and why. A dead end after retries → ask.
 
-5. **Completion**: when the goal is met, state clearly what was done, summarize key decisions
-   made along the way, and suggest next steps if relevant.
+5. **Review**: before declaring done, re-read the full diff with fresh eyes:
+   - every acceptance criterion met and demonstrably verified
+   - no dead code, leftovers, or debug artifacts
+   - no scope creep or unrelated edits
+   - security sanity: input validated, no hardcoded secrets (`{env:VAR}` / `${VAR}`)
+   Fix what you find and re-verify. Iterate until the diff is clean.
+
+6. **Present**: state what was done, how it was verified, key decisions and tradeoffs, and
+   suggest next steps if relevant. Hand over — the user accepts or steers changes in normal
+   conversation.
+
+## Guardrails (always)
+
+- Before destructive actions (`rm -rf`, `DROP TABLE`, force-push, package deletion, wide
+  renames/refactors): summarize intent and confirm first.
+- Before pushing to a remote or deploying: summarize what will happen and confirm.
+- Never auto-commit or auto-push — suggest committing when ready, don't do it.
+- Approaching context limits or confused by scope creep: flag it, ask to narrow the goal or
+  start a new session.
 
 ## When to ask (do not guess)
 
-- The objective references something outside the current working directory or an unknown project.
+- The objective references something outside the current working directory or an unknown
+  project.
 - The intent is ambiguous ("make it better", "optimize") — ask for specifics.
-- A destructive action is needed (`rm -rf`, `DROP TABLE`, force-push, package deletion).
+- A destructive action is needed (see guardrails).
 - You've exhausted recovery options on an error (3 attempts or a clear dead end).
 
 ## When not to ask (just do it)

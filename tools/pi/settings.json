@@ -1,5 +1,7 @@
 {
   "defaultProvider": "nan",
-  "defaultModel": "mimo-v2.5",
-  "lastChangelogVersion": "0.78.0"
+  "defaultModel": "deepseek-v4-flash",
+  "lastChangelogVersion": "0.80.10",
+  "theme": "dark",
+  "defaultThinkingLevel": "high"
 }

@@ -33,7 +33,7 @@ Then set your secrets and reload the shell:
 
 ```sh
 cp shell/secrets.fish.example ~/.config/fish/conf.d/secrets.fish
-# edit the file, put in the real NAN_API_KEY
+# edit the file, put in the real NX_LLM_GATEWAY_KEY
 exec fish
 ```
 
@@ -73,11 +73,17 @@ state and credentials).
 
 ## Secrets
 Real credentials never live in this repo. Configs reference env vars:
-- `opencode.json` → `"apiKey": "{env:NAN_API_KEY}"`
-- `pi/extensions/nan.ts` → `process.env.NAN_API_KEY`
+- `opencode.json` → `"apiKey": "{env:NX_LLM_GATEWAY_KEY}"`
+- `pi/extensions/nan.ts` → `process.env.NX_LLM_GATEWAY_KEY`
 
 The real value lives only in `~/.config/fish/conf.d/secrets.fish` (gitignored, auto-sourced by fish).
-If `{env:}` ever fails for a custom OpenCode provider, switch that field to `"{file:~/.secrets/nan-key}"`.
+If `{env:}` ever fails for a custom OpenCode provider, switch that field to `"{file:~/.secrets/gateway-key}"`.
+
+## Single inference gateway
+All model configs (`tools/nan/models.json`, propagated by `tools/nan/gen.ts` into `opencode.json`,
+`pi/extensions/nan.ts` and `~/.factory/settings.json`) route through a self-hosted LiteLLM proxy
+(`llm.nxssie.dev`) instead of talking to inference providers directly — one virtual key, one place
+to add/remove models or rotate credentials. See `~/Projects/personal/ai-gateway`.
 
 ## Adding a skill / command
 1. Create `agents/skills/<name>/SKILL.md` (YAML frontmatter: `name`, `description` + markdown body)

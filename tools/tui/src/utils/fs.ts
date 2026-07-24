@@ -12,8 +12,8 @@ export const MODELS_FILE = join(REPO_ROOT, 'tools/nan/models.json')
 export const GEN_SCRIPT = join(REPO_ROOT, 'tools/nan/gen.ts')
 export const INSTALL_SCRIPT = join(REPO_ROOT, 'install.sh')
 
-export function getNanApiKey(): string {
-  return process.env['NAN_API_KEY'] ?? ''
+export function getGatewayApiKey(): string {
+  return process.env['NX_LLM_GATEWAY_KEY'] ?? ''
 }
 
 export function maskKey(key: string): string {
@@ -29,14 +29,14 @@ export async function readSecretsFile(): Promise<string> {
   }
 }
 
-export async function updateNanApiKey(newKey: string): Promise<void> {
+export async function updateGatewayApiKey(newKey: string): Promise<void> {
   const content = await readSecretsFile()
-  const line = `set -gx NAN_API_KEY "${newKey}"`
-  const updated = /set -gx NAN_API_KEY/.test(content)
-    ? content.replace(/set -gx NAN_API_KEY "[^"]*"/, line)
+  const line = `set -gx NX_LLM_GATEWAY_KEY "${newKey}"`
+  const updated = /set -gx NX_LLM_GATEWAY_KEY/.test(content)
+    ? content.replace(/set -gx NX_LLM_GATEWAY_KEY "[^"]*"/, line)
     : content.trimEnd() + '\n' + line + '\n'
   await Bun.write(SECRETS_FILE, updated)
-  process.env['NAN_API_KEY'] = newKey
+  process.env['NX_LLM_GATEWAY_KEY'] = newKey
 }
 
 export interface NaNModel {

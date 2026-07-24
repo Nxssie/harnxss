@@ -1,7 +1,7 @@
 import { Box, Text } from 'ink'
 import React, { useEffect, useState } from 'react'
 import {
-  getNanApiKey,
+  getGatewayApiKey,
   getToolStatuses,
   maskKey,
   readModels,
@@ -12,7 +12,7 @@ import {
 export function Dashboard() {
   const [tools, setTools] = useState<ToolStatus[]>([])
   const [models, setModels] = useState<NaNConfig | null>(null)
-  const key = getNanApiKey()
+  const key = getGatewayApiKey()
 
   useEffect(() => {
     setTools(getToolStatuses())
@@ -22,7 +22,7 @@ export function Dashboard() {
   return (
     <Box flexDirection="column" gap={1}>
       <Box flexDirection="column">
-        <Text bold>NaN API Key</Text>
+        <Text bold>Gateway API Key</Text>
         <Box gap={2}>
           <Text color={key ? 'green' : 'red'}>{key ? '●' : '○'}</Text>
           <Text color={key ? 'white' : 'red'}>

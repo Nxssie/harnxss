@@ -1,7 +1,7 @@
 import { Box, Text, useInput } from 'ink'
 import TextInput from 'ink-text-input'
 import React, { useState } from 'react'
-import { GEN_SCRIPT, getNanApiKey, maskKey, updateNanApiKey } from '../utils/fs.js'
+import { GEN_SCRIPT, getGatewayApiKey, maskKey, updateGatewayApiKey } from '../utils/fs.js'
 import { runScript } from '../utils/shell.js'
 
 type Step = 'view' | 'input' | 'confirm' | 'running' | 'done' | 'error'
@@ -37,7 +37,7 @@ export function ApiKeys({ onLock, onUnlock }: Props) {
   async function confirmRotate() {
     setStep('running')
     try {
-      await updateNanApiKey(newKey.trim())
+      await updateGatewayApiKey(newKey.trim())
       const result = await runScript(GEN_SCRIPT)
       if (result.ok) {
         setMessage("Key updated and configs regenerated. Run 'exec fish' to apply in this shell.")
@@ -68,11 +68,11 @@ export function ApiKeys({ onLock, onUnlock }: Props) {
     }
   }, { isActive: step !== 'input' && step !== 'running' })
 
-  const currentKey = getNanApiKey()
+  const currentKey = getGatewayApiKey()
 
   return (
     <Box flexDirection="column" gap={1}>
-      <Text bold>NaN API Key</Text>
+      <Text bold>Gateway API Key</Text>
 
       {step === 'view' && (
         <Box flexDirection="column" gap={1}>

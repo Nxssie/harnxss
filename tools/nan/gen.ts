@@ -3,7 +3,7 @@ import { resolve } from "node:path";
 
 const REPO = resolve(import.meta.dir, "../..");
 const HOME = process.env.HOME!;
-const NAN_API_KEY = process.env.NAN_API_KEY ?? "";
+const GATEWAY_API_KEY = process.env.NX_LLM_GATEWAY_KEY ?? "";
 
 interface Model {
   id: string;
@@ -29,6 +29,7 @@ const opencode = JSON.parse(readFileSync(opencodePath, "utf-8"));
 opencode.provider.nan.models = Object.fromEntries(
   config.models.map((m) => [m.id, { name: m.name }]),
 );
+opencode.provider.nan.options.baseURL = config.baseUrl;
 writeFileSync(opencodePath, JSON.stringify(opencode, null, 2) + "\n");
 console.log("  wrote   tools/opencode/opencode.json");
 
@@ -55,7 +56,7 @@ const nanTs =
   `  pi.registerProvider("nan", {\n` +
   `    name: "NaN",\n` +
   `    baseUrl: "${config.baseUrl}",\n` +
-  `    apiKey: process.env.NAN_API_KEY ?? "",\n` +
+  `    apiKey: process.env.NX_LLM_GATEWAY_KEY ?? "",\n` +
   `    api: "openai-completions",\n` +
   `    models: [\n` +
   `${piModels},\n` +
@@ -74,7 +75,7 @@ try {
     model: m.id,
     provider: "openai",
     baseUrl: config.baseUrl,
-    ...(NAN_API_KEY && { apiKey: NAN_API_KEY }),
+    ...(GATEWAY_API_KEY && { apiKey: GATEWAY_API_KEY }),
     displayName: m.name,
     maxContextLimit: m.contextWindow,
     maxOutputTokens: m.maxTokens,

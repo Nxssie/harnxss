@@ -1,8 +1,8 @@
 {
-  "baseUrl": "https://api.nan.builders/v1",
+  "baseUrl": "https://llm.nxssie.dev/v1",
   "models": [
     {
-      "id": "qwen3.6",
+      "id": "nan-qwen3.6",
       "name": "Qwen 3.6 35B A3B",
       "contextWindow": 262144,
       "maxTokens": 16384,
@@ -10,7 +10,7 @@
       "multimodal": false
     },
     {
-      "id": "gemma4",
+      "id": "nan-gemma4",
       "name": "Gemma 4 26B A4B",
       "contextWindow": 262144,
       "maxTokens": 16384,
@@ -18,7 +18,7 @@
       "multimodal": false
     },
     {
-      "id": "deepseek-v4-flash",
+      "id": "nan-deepseek-v4-flash",
       "name": "DeepSeek V4 Flash 284B A13B",
       "contextWindow": 262144,
       "maxTokens": 16384,
@@ -26,7 +26,7 @@
       "multimodal": false
     },
     {
-      "id": "mimo-v2.5",
+      "id": "nan-mimo-v2.5",
       "name": "Xiaomi MiMo V2.5 310B A15B",
       "contextWindow": 524288,
       "maxTokens": 32768,

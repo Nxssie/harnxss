@@ -3,24 +3,24 @@
   "provider": {
     "nan": {
       "models": {
-        "qwen3.6": {
+        "nan-qwen3.6": {
           "name": "Qwen 3.6 35B A3B"
         },
-        "gemma4": {
+        "nan-gemma4": {
           "name": "Gemma 4 26B A4B"
         },
-        "deepseek-v4-flash": {
+        "nan-deepseek-v4-flash": {
           "name": "DeepSeek V4 Flash 284B A13B"
         },
-        "mimo-v2.5": {
+        "nan-mimo-v2.5": {
           "name": "Xiaomi MiMo V2.5 310B A15B"
         }
       },
       "name": "NaN",
       "npm": "@ai-sdk/openai-compatible",
       "options": {
-        "apiKey": "{env:NAN_API_KEY}",
-        "baseURL": "https://api.nan.builders/v1"
+        "apiKey": "{env:NX_LLM_GATEWAY_KEY}",
+        "baseURL": "https://llm.nxssie.dev/v1"
       }
     }
   }

@@ -82,12 +82,12 @@ AGENTS="$HARNXSS/agents/AGENTS.md"
 echo "AI-hub install from: $HARNXSS"
 echo
 
-# ── NaN model codegen (source of truth → opencode + pi + factory) ────────────
-echo "nan models:"
+# ── gateway model codegen (source of truth → opencode + pi + factory) ───────
+echo "gateway models:"
 if have bun; then
-  bun run "$HARNXSS/tools/nan/gen.ts"
+  bun run "$HARNXSS/tools/llm/gen.ts"
 else
-  echo "  skip    bun not found — opencode.json, nan.ts, and factory settings NOT regenerated"
+  echo "  skip    bun not found — opencode.json, codex/config.toml, and factory settings NOT regenerated"
 fi
 echo
 

@@ -1,1 +1,34 @@
 #:schema https://developers.openai.com/codex/config-schema.json
+
+model_provider = "llm"
+model = "nan-deepseek-v4-flash"
+
+[model_providers.llm]
+name = "LLM Gateway"
+base_url = "https://llm.nxssie.dev/v1"
+env_key = "NX_LLM_GATEWAY_KEY"
+wire_api = "chat"
+
+[profiles.nan-deepseek-v4-flash]
+model = "nan-deepseek-v4-flash"
+model_provider = "llm"
+
+[profiles.nan-gemma4]
+model = "nan-gemma4"
+model_provider = "llm"
+
+[profiles.nan-mimo-v2.5]
+model = "nan-mimo-v2.5"
+model_provider = "llm"
+
+[profiles.nan-qwen3.6]
+model = "nan-qwen3.6"
+model_provider = "llm"
+
+[profiles.opencode-go-glm-5.2]
+model = "opencode-go-glm-5.2"
+model_provider = "llm"
+
+[profiles.opencode-go-kimi-k3]
+model = "opencode-go-kimi-k3"
+model_provider = "llm"

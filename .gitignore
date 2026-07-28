@@ -14,3 +14,7 @@ auth.json
 
 # Tool deps / runtime state
 node_modules/
+
+# Pi runtime data (sessions, auth, models)
+.pi/sessions/
+.pi/agent/

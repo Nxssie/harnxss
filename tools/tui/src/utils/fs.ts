@@ -8,8 +8,8 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 export const HOME = homedir()
 export const REPO_ROOT = join(__dirname, '../../../..')
 export const SECRETS_FILE = join(HOME, '.config/fish/conf.d/secrets.fish')
-export const MODELS_FILE = join(REPO_ROOT, 'tools/nan/models.json')
-export const GEN_SCRIPT = join(REPO_ROOT, 'tools/nan/gen.ts')
+export const MODELS_FILE = join(REPO_ROOT, 'tools/llm/models.json')
+export const GEN_SCRIPT = join(REPO_ROOT, 'tools/llm/gen.ts')
 export const INSTALL_SCRIPT = join(REPO_ROOT, 'install.sh')
 
 export function getGatewayApiKey(): string {
@@ -39,27 +39,71 @@ export async function updateGatewayApiKey(newKey: string): Promise<void> {
   process.env['NX_LLM_GATEWAY_KEY'] = newKey
 }
 
-export interface NaNModel {
-  id: string
-  name: string
-  contextWindow: number
-  maxTokens: number
+export interface ModelOverride {
+  name?: string
+  contextWindow?: number
+  maxTokens?: number
   reasoning?: boolean
   multimodal?: boolean
 }
 
-export interface NaNConfig {
+export interface GatewayConfig {
   baseUrl: string
-  models: NaNModel[]
+  overrides: Record<string, ModelOverride>
 }
 
-export async function readModels(): Promise<NaNConfig> {
+export interface GatewayModel {
+  id: string
+  name: string
+  contextWindow: number
+  maxTokens: number
+  reasoning: boolean
+  multimodal: boolean
+}
+
+const MODEL_DEFAULTS = {
+  contextWindow: 128_000,
+  maxTokens: 8_192,
+  reasoning: false,
+  multimodal: false,
+}
+
+export async function readGatewayConfig(): Promise<GatewayConfig> {
   const text = await Bun.file(MODELS_FILE).text()
-  return JSON.parse(text) as NaNConfig
+  return JSON.parse(text) as GatewayConfig
 }
 
-export async function writeModels(config: NaNConfig): Promise<void> {
+export async function writeGatewayConfig(config: GatewayConfig): Promise<void> {
   await Bun.write(MODELS_FILE, JSON.stringify(config, null, 2) + '\n')
+}
+
+/** Live model catalog, discovered from the gateway's `/models` and merged
+ * with the local metadata overrides — mirrors `tools/llm/gen.ts`. */
+export async function fetchGatewayModels(): Promise<{ baseUrl: string; models: GatewayModel[] }> {
+  const config = await readGatewayConfig()
+  const apiKey = getGatewayApiKey()
+  const res = await fetch(`${config.baseUrl}/models`, {
+    headers: apiKey ? { Authorization: `Bearer ${apiKey}` } : {},
+  })
+  if (!res.ok) {
+    throw new Error(`gateway /models returned ${res.status} ${res.statusText}`)
+  }
+  const body = (await res.json()) as { data: { id: string }[] }
+  const models = body.data
+    .map(m => m.id)
+    .sort()
+    .map((id): GatewayModel => {
+      const o = config.overrides[id] ?? {}
+      return {
+        id,
+        name: o.name ?? id,
+        contextWindow: o.contextWindow ?? MODEL_DEFAULTS.contextWindow,
+        maxTokens: o.maxTokens ?? MODEL_DEFAULTS.maxTokens,
+        reasoning: o.reasoning ?? MODEL_DEFAULTS.reasoning,
+        multimodal: o.multimodal ?? MODEL_DEFAULTS.multimodal,
+      }
+    })
+  return { baseUrl: config.baseUrl, models }
 }
 
 export interface ToolStatus {

@@ -1,22 +1,22 @@
 import { Box, Text } from 'ink'
 import React, { useEffect, useState } from 'react'
 import {
+  fetchGatewayModels,
   getGatewayApiKey,
   getToolStatuses,
   maskKey,
-  readModels,
-  type NaNConfig,
+  type GatewayModel,
   type ToolStatus,
 } from '../utils/fs.js'
 
 export function Dashboard() {
   const [tools, setTools] = useState<ToolStatus[]>([])
-  const [models, setModels] = useState<NaNConfig | null>(null)
+  const [models, setModels] = useState<GatewayModel[] | null>(null)
   const key = getGatewayApiKey()
 
   useEffect(() => {
     setTools(getToolStatuses())
-    readModels().then(setModels).catch(() => null)
+    fetchGatewayModels().then(r => setModels(r.models)).catch(() => null)
   }, [])
 
   return (
@@ -35,8 +35,8 @@ export function Dashboard() {
         <Text bold>Models</Text>
         {models ? (
           <Box gap={2}>
-            <Text color="cyan">{models.models.length} loaded</Text>
-            <Text color="gray">{models.models.map(m => m.id).join('  ')}</Text>
+            <Text color="cyan">{models.length} on gateway</Text>
+            <Text color="gray">{models.map(m => m.id).join('  ')}</Text>
           </Box>
         ) : (
           <Text color="gray">loading…</Text>

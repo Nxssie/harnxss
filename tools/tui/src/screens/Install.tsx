@@ -29,7 +29,7 @@ export function Install() {
     <Box flexDirection="column" gap={1}>
       <Text bold>Install</Text>
       <Text color="gray" dimColor>
-        Runs install.sh — symlinks configs, regenerates NaN models, bootstraps secrets
+        Runs install.sh — symlinks configs, regenerates gateway models, bootstraps secrets
       </Text>
 
       {!running && result === null && (

@@ -1,7 +1,7 @@
 {
-  "defaultProvider": "nan",
+  "defaultProvider": "llm",
   "defaultModel": "nan-deepseek-v4-flash",
-  "lastChangelogVersion": "0.81.1",
+  "lastChangelogVersion": "0.82.1",
   "theme": "dark",
   "defaultThinkingLevel": "high"
 }

@@ -2,40 +2,54 @@ import { Box, Text, useInput } from 'ink'
 import React, { useEffect, useState } from 'react'
 import {
   GEN_SCRIPT,
-  readModels,
-  writeModels,
-  type NaNConfig,
-  type NaNModel,
+  fetchGatewayModels,
+  readGatewayConfig,
+  writeGatewayConfig,
+  type GatewayModel,
 } from '../utils/fs.js'
 import { runScript } from '../utils/shell.js'
 
 export function Models() {
-  const [config, setConfig] = useState<NaNConfig | null>(null)
+  const [baseUrl, setBaseUrl] = useState('')
+  const [models, setModels] = useState<GatewayModel[] | null>(null)
+  const [error, setError] = useState<string | null>(null)
   const [selected, setSelected] = useState(0)
   const [regenRunning, setRegenRunning] = useState(false)
   const [regenMsg, setRegenMsg] = useState<{ ok: boolean; text: string } | null>(null)
 
+  const reload = () =>
+    fetchGatewayModels()
+      .then(r => {
+        setBaseUrl(r.baseUrl)
+        setModels(r.models)
+        setError(null)
+      })
+      .catch(e => setError(e instanceof Error ? e.message : String(e)))
+
   useEffect(() => {
-    readModels().then(setConfig).catch(() => null)
+    reload()
   }, [])
 
   useInput((input, key) => {
-    if (!config) return
+    if (!models) return
 
     if (key.upArrow) {
       setSelected(s => Math.max(0, s - 1))
       return
     }
     if (key.downArrow) {
-      setSelected(s => Math.min(config.models.length - 1, s + 1))
+      setSelected(s => Math.min(models.length - 1, s + 1))
       return
     }
 
-    if (input === 'd' && config.models.length > 1) {
-      const updated = { ...config, models: config.models.filter((_, i) => i !== selected) }
-      setConfig(updated)
-      setSelected(s => Math.min(s, updated.models.length - 1))
-      void writeModels(updated)
+    if (input === 'd' && models[selected]) {
+      const id = models[selected].id
+      void readGatewayConfig()
+        .then(config => {
+          const { [id]: _dropped, ...overrides } = config.overrides
+          return writeGatewayConfig({ ...config, overrides })
+        })
+        .then(reload)
       setRegenMsg(null)
       return
     }
@@ -50,21 +64,23 @@ export function Models() {
             : { ok: false, text: result.stderr || result.stdout || 'gen.ts failed' },
         )
         setRegenRunning(false)
+        reload()
       })
     }
   }, { isActive: !regenRunning })
 
-  if (!config) return <Text color="gray">loading…</Text>
+  if (error) return <Text color="red">✗ {error}</Text>
+  if (!models) return <Text color="gray">loading…</Text>
 
   return (
     <Box flexDirection="column" gap={1}>
       <Box gap={2}>
         <Text bold>Models</Text>
-        <Text color="gray" dimColor>{config.baseUrl}</Text>
+        <Text color="gray" dimColor>{baseUrl} (live)</Text>
       </Box>
 
       <Box flexDirection="column">
-        {config.models.map((model, i) => (
+        {models.map((model, i) => (
           <ModelRow key={model.id} model={model} isSelected={i === selected} />
         ))}
       </Box>
@@ -77,13 +93,13 @@ export function Models() {
       )}
 
       {!regenRunning && (
-        <Text color="gray">↑↓ select  d delete  r regenerate configs</Text>
+        <Text color="gray">↑↓ select  d clear name override  r regenerate configs</Text>
       )}
     </Box>
   )
 }
 
-function ModelRow({ model, isSelected }: { model: NaNModel; isSelected: boolean }) {
+function ModelRow({ model, isSelected }: { model: GatewayModel; isSelected: boolean }) {
   const ctx =
     model.contextWindow >= 1_000_000
       ? `${model.contextWindow / 1_000_000}M ctx`

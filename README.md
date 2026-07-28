@@ -54,7 +54,7 @@ The installer only touches tools that are present, backs up any existing real fi
 | `tools/codex/config.toml`       | `~/.codex/config.toml`               |
 | `tools/gemini/settings.json`    | `~/.gemini/settings.json` (if present) |
 | `tools/mise/config.toml`        | `~/.config/mise/config.toml` (if present) |
-| `tools/pi/settings.json`        | `~/.pi/agent/settings.json` (if present) |
+| `tools/pi/settings.json`        | `~/.pi/agent/settings.json` (copied, if present) |
 | `tools/pi/APPEND_SYSTEM.md`     | `~/.pi/agent/APPEND_SYSTEM.md` (if present) |
 | `tools/pi/extensions/*.ts`      | `~/.pi/agent/extensions/` (if present) |
 | `agents/skills/<name>`          | `~/.claude/skills/`, `~/.config/opencode/skill/`, `~/.codex/skills/`, `~/.pi/agent/skills/` |
@@ -74,16 +74,29 @@ state and credentials).
 ## Secrets
 Real credentials never live in this repo. Configs reference env vars:
 - `opencode.json` → `"apiKey": "{env:NX_LLM_GATEWAY_KEY}"`
-- `pi/extensions/nan.ts` → `process.env.NX_LLM_GATEWAY_KEY`
+- `pi/extensions/llm.ts` → `process.env.NX_LLM_GATEWAY_KEY`
 
 The real value lives only in `~/.config/fish/conf.d/secrets.fish` (gitignored, auto-sourced by fish).
 If `{env:}` ever fails for a custom OpenCode provider, switch that field to `"{file:~/.secrets/gateway-key}"`.
 
 ## Single inference gateway
-All model configs (`tools/nan/models.json`, propagated by `tools/nan/gen.ts` into `opencode.json`,
-`pi/extensions/nan.ts` and `~/.factory/settings.json`) route through a self-hosted LiteLLM proxy
-(`llm.nxssie.dev`) instead of talking to inference providers directly — one virtual key, one place
-to add/remove models or rotate credentials. See `~/Projects/personal/ai-gateway`.
+Every CLI talks only to a self-hosted LiteLLM proxy (`llm.nxssie.dev`) — never to a provider
+directly. One virtual key (`NX_LLM_GATEWAY_KEY`), one place to add/remove models or rotate
+credentials. The provider catalog itself (which upstreams are wired into LiteLLM) lives in
+`~/Projects/personal/ai-gateway`, not here.
+
+Model *discovery* is zero-config: `tools/llm/gen.ts` calls `GET {baseUrl}/models` on the gateway at
+generation time and propagates whatever it finds into `opencode.json` and
+`~/.factory/settings.json` (both need a static list) plus per-model profiles in `codex/config.toml`
+(`codex -p <model-id>` switches models). `tools/llm/models.json` no longer enumerates models — it's
+an optional `id → {name, contextWindow, maxTokens, ...}` metadata override map; anything the gateway
+returns without an entry there gets sane defaults. **Pi** goes one step further and needs no
+generation step at all: `pi/extensions/llm.ts` is hand-written, static code that implements
+`refreshModels()` and re-fetches `/models` from the gateway at runtime.
+
+Adding a model in LiteLLM means: re-run `bun run tools/llm/gen.ts` (or `sh install.sh`) to refresh
+OpenCode/Codex/Factory, and it just appears in Pi on its own next refresh — no repo edits needed
+unless you want to give it a friendly display name via `models.json`.
 
 ## Adding a skill / command
 1. Create `agents/skills/<name>/SKILL.md` (YAML frontmatter: `name`, `description` + markdown body)
@@ -91,9 +104,11 @@ to add/remove models or rotate credentials. See `~/Projects/personal/ai-gateway`
 2. Re-run `sh install.sh`. It symlinks the new resource into every present tool.
 
 ## Known caveats
-- **Claude `settings.json` is copied, not symlinked** — Claude Code rewrites it at runtime (model,
-  effort, flags), which would clobber the versioned hub file. The installer seeds it from the hub on
-  first run; Claude owns the local copy after that.
+- **Claude and Pi `settings.json` are copied, not symlinked** — both tools rewrite their settings at
+  runtime (model, effort/thinking level, changelog marker), which would clobber the versioned hub
+  file. The installer seeds each from the hub on first run; the tool owns the local copy after that.
+  Deliberate config changes go into `tools/<tool>/settings.json` and land after deleting the local
+  copy (or `.bak.<epoch>` it) and re-running `sh install.sh`.
 - **Claude #25367** — a symlinked skill may log a cosmetic "Unknown skill" warning but still runs.
 - **OpenCode #18848** — symlinked skills aren't discovered inside a git-worktree sandbox session.
 - **Codex** — the global `AGENTS.md` is capped at 32 KiB; keep it lean (≤ ~5 KB).
@@ -102,4 +117,5 @@ to add/remove models or rotate credentials. See `~/Projects/personal/ai-gateway`
 
 ## Credits
 
-LLM inference powered by **NaN**, an inference service — [nan.builders](https://nan.builders) · [justuse.nan.builders](https://justuse.nan.builders).
+Inference is served through a self-hosted LiteLLM gateway — see `~/Projects/personal/ai-gateway`
+for the upstream providers wired into it.

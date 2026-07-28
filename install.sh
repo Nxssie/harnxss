@@ -10,8 +10,9 @@
 # Usage:
 #   sh install.sh        # symlink resources into each tool's global config (idempotent)
 #
-# Note: ~/.claude/settings.json is COPIED (not symlinked) — Claude Code rewrites it at runtime
-# (model, effort, flags) and would otherwise clobber the versioned hub file.
+# Note: ~/.claude/settings.json and ~/.pi/agent/settings.json are COPIED (not symlinked) — both
+# tools rewrite their settings at runtime (model, effort/thinking level, changelog marker) and
+# would otherwise clobber the versioned hub file.
 set -eu
 
 HARNXSS="$(cd "$(dirname "$0")" && pwd)"
@@ -20,6 +21,21 @@ for arg in "$@"; do
 done
 
 have() { command -v "$1" >/dev/null 2>&1; }
+
+# seed_local_copy SRC DST LABEL — copy once, never touch again. For settings
+# files a tool rewrites at runtime (model, effort, flags); symlinking would let
+# that runtime churn leak back into the versioned repo file.
+seed_local_copy() {
+  src="$1"; dst="$2"; label="$3"
+  if [ -L "$dst" ] || [ ! -e "$dst" ]; then
+    if [ -L "$dst" ]; then rm -f "$dst"; fi   # migrate old symlink → real copy
+    mkdir -p "$(dirname "$dst")"
+    cp "$src" "$dst"
+    echo "  copy    $dst (seeded; $label manages this local copy from here)"
+  else
+    echo "  keep    $dst (real file, $label-managed)"
+  fi
+}
 
 # backup_then_link SRC DST [copy]
 backup_then_link() {
@@ -86,22 +102,14 @@ if $present_pi;       then backup_then_link "$AGENTS" "$HOME/.pi/agent/AGENTS.md
 # ── Tool configs (secrets externalized) ──────────────────────────────────────
 echo "tool configs:"
 if $present_claude; then
-  cs="$HOME/.claude/settings.json"
-  if [ -L "$cs" ] || [ ! -e "$cs" ]; then
-    if [ -L "$cs" ]; then rm -f "$cs"; fi   # migrate old symlink → real copy
-    mkdir -p "$(dirname "$cs")"
-    cp "$HARNXSS/tools/claude/settings.json" "$cs"
-    echo "  copy    $cs (seeded; Claude manages this local copy from here)"
-  else
-    echo "  keep    $cs (real file, Claude-managed)"
-  fi
+  seed_local_copy "$HARNXSS/tools/claude/settings.json" "$HOME/.claude/settings.json" "Claude"
 fi
 if $present_opencode; then backup_then_link "$HARNXSS/tools/opencode/opencode.json" "$HOME/.config/opencode/opencode.json"; fi
 if $present_codex;    then backup_then_link "$HARNXSS/tools/codex/config.toml"       "$HOME/.codex/config.toml"; fi
 if $present_gemini;   then backup_then_link "$HARNXSS/tools/gemini/settings.json"    "$HOME/.gemini/settings.json"; fi
 if $present_mise;     then backup_then_link "$HARNXSS/tools/mise/config.toml"         "$HOME/.config/mise/config.toml"; fi
 if $present_pi; then
-  backup_then_link "$HARNXSS/tools/pi/settings.json"          "$HOME/.pi/agent/settings.json"
+  seed_local_copy "$HARNXSS/tools/pi/settings.json" "$HOME/.pi/agent/settings.json" "pi"
   backup_then_link "$HARNXSS/tools/pi/APPEND_SYSTEM.md"       "$HOME/.pi/agent/APPEND_SYSTEM.md"
   for ext in "$HARNXSS"/tools/pi/extensions/*.ts; do
     [ -f "$ext" ] || continue

@@ -3,23 +3,20 @@
   "provider": {
     "llm": {
       "models": {
-        "nan-deepseek-v4-flash": {
+        "nan-deepseek-v4-flash-0731": {
           "name": "DeepSeek V4 Flash 284B A13B"
         },
-        "nan-gemma4": {
-          "name": "Gemma 4 26B A4B"
-        },
-        "nan-mimo-v2.5": {
-          "name": "Xiaomi MiMo V2.5 310B A15B"
-        },
-        "nan-qwen3.6": {
-          "name": "Qwen 3.6 35B A3B"
+        "opencode-go-deepseek-v4-flash": {
+          "name": "opencode-go-deepseek-v4-flash"
         },
         "opencode-go-glm-5.2": {
           "name": "GLM 5.2"
         },
         "opencode-go-kimi-k3": {
           "name": "Kimi K3"
+        },
+        "opencode-go-qwen3.8-max": {
+          "name": "opencode-go-qwen3.8-max"
         }
       },
       "name": "LLM Gateway",

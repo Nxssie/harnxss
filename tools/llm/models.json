@@ -1,25 +1,12 @@
 {
   "baseUrl": "https://llm.nxssie.dev/v1",
+  "disabledPrefixes": ["nan-"],
+  "enabledOverrides": ["nan-deepseek-v4-flash-0731"],
   "overrides": {
-    "nan-qwen3.6": {
-      "name": "Qwen 3.6 35B A3B",
-      "contextWindow": 262144,
-      "maxTokens": 16384
-    },
-    "nan-gemma4": {
-      "name": "Gemma 4 26B A4B",
-      "contextWindow": 262144,
-      "maxTokens": 16384
-    },
-    "nan-deepseek-v4-flash": {
+    "nan-deepseek-v4-flash-0731": {
       "name": "DeepSeek V4 Flash 284B A13B",
       "contextWindow": 262144,
       "maxTokens": 16384
-    },
-    "nan-mimo-v2.5": {
-      "name": "Xiaomi MiMo V2.5 310B A15B",
-      "contextWindow": 524288,
-      "maxTokens": 32768
     },
     "opencode-go-glm-5.2": {
       "name": "GLM 5.2",

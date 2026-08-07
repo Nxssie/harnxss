@@ -15,6 +15,8 @@ interface ModelOverride {
 
 interface GatewayConfig {
   baseUrl: string;
+  disabledPrefixes?: string[];
+  enabledOverrides?: string[];
   overrides: Record<string, ModelOverride>;
 }
 
@@ -52,7 +54,16 @@ async function fetchModelIds(): Promise<string[]> {
   return body.data.map((m) => m.id).sort();
 }
 
-const ids = await fetchModelIds();
+const disabledPrefixes = config.disabledPrefixes ?? [];
+const enabledOverrides = config.enabledOverrides ?? [];
+const allIds = await fetchModelIds();
+const ids = allIds.filter(
+  (id) => enabledOverrides.includes(id) || !disabledPrefixes.some((p) => id.startsWith(p)),
+);
+const skipped = allIds.length - ids.length;
+if (skipped > 0) {
+  console.log(`  skip     ${skipped} disabled model(s) (prefixes: ${disabledPrefixes.join(", ")})`);
+}
 const models: Model[] = ids.map((id) => {
   const o = config.overrides[id] ?? {};
   return {

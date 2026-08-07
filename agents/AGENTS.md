@@ -44,6 +44,12 @@ chat may be in **Spanish** — match the language I write to you in.
 - Reverse proxy: **Caddy** (+ Cloudflare). Infra-as-code: **Terraform** on **Proxmox**.
 - Persist data via volumes; pin runtime versions (`.node-version`, lockfiles).
 
+## Model delegation
+- **Pi** supports native CLI model selection: `pi --provider llm --model <id> -p "<prompt>"`
+  (non-interactive). Use this to delegate subtasks to cheaper/faster models on my
+  self-hosted gateway instead of running everything on the calling agent's own model.
+- Available model IDs live in `tools/pi/extensions/llm.ts` (fetched live from the gateway).
+
 ## Secrets
 Never write a real credential into a tracked file. Reference env vars (`{env:VAR}`, `env_key`,
 `${VAR}`) and keep real values in `~/.config/fish/conf.d/secrets.fish` (gitignored).

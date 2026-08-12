@@ -5,18 +5,22 @@ import type {
 
 const BASE_URL = "https://llm.nxssie.dev/v1";
 
-// Unsubscribed but kept for a possible future resubscription — the gateway still
-// lists these ids with dead routes, so keep them out of the picker until then.
-const DISABLED_PREFIXES = ["nan-"];
+// Unsubscribed as of 2026-08-16 — remove this entry once the subscription
+// actually lapses (it was kept active past that date only via the override
+// this comment used to guard; there's no more dynamic filtering to gate it).
+const NAN_SUBSCRIPTION_ENTRY = "nan-deepseek-v4-flash-0731";
 
-// Exceptions to DISABLED_PREFIXES — kept active while the nan subscription
-// runs (through 2026-08-16).
-const ENABLED_OVERRIDES = ["nan-deepseek-v4-flash-0731"];
-
-// Optional per-model metadata; anything the gateway lists without an entry
-// here falls back to conservative defaults below.
-const METADATA: Record<string, Partial<ProviderModelConfig>> = {
-  "nan-deepseek-v4-flash-0731": {
+// Full model list, curated by hand instead of fetched from the gateway at
+// call time: pi-acp spawns a fresh `pi --mode rpc` per ACP session and asks
+// for available models immediately — a live `fetch(${BASE_URL}/models)` here
+// loses that race almost every time (confirmed: ~4-6s to resolve on this
+// gateway/host), and pi-acp treats an empty list as "not authenticated" and
+// fails the session before the fetch ever gets a chance to finish. Returning
+// this list synchronously removes the race entirely, at the cost of no
+// longer auto-discovering models newly added to the gateway — add them here
+// by hand instead.
+const MODELS: Record<string, Partial<ProviderModelConfig>> = {
+  [NAN_SUBSCRIPTION_ENTRY]: {
     name: "DeepSeek V4 Flash 284B A13B",
     contextWindow: 262144,
     maxTokens: 16384,
@@ -49,31 +53,16 @@ const METADATA: Record<string, Partial<ProviderModelConfig>> = {
 };
 
 async function refreshModels(): Promise<ProviderModelConfig[]> {
-  const apiKey = process.env.NX_LLM_GATEWAY_KEY ?? "";
-  const res = await fetch(`${BASE_URL}/models`, {
-    headers: apiKey ? { Authorization: `Bearer ${apiKey}` } : {},
-  });
-  if (!res.ok) {
-    throw new Error(`gateway /models returned ${res.status} ${res.statusText}`);
-  }
-  const body = (await res.json()) as { data: { id: string }[] };
-  return body.data
-    .filter(
-      ({ id }) => ENABLED_OVERRIDES.includes(id) || !DISABLED_PREFIXES.some((p) => id.startsWith(p)),
-    )
-    .map(({ id }): ProviderModelConfig => {
-      const meta = METADATA[id] ?? {};
-      return {
-        id,
-        name: id,
-        reasoning: false,
-        input: ["text"],
-        cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
-        contextWindow: 128_000,
-        maxTokens: 8_192,
-        ...meta,
-      };
-    });
+  return Object.entries(MODELS).map(([id, meta]): ProviderModelConfig => ({
+    id,
+    name: id,
+    reasoning: false,
+    input: ["text"],
+    cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
+    contextWindow: 128_000,
+    maxTokens: 8_192,
+    ...meta,
+  }));
 }
 
 export default function (pi: ExtensionAPI) {

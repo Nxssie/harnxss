@@ -19,3 +19,11 @@ so every project session gets it, not just one repo.
 - **Other tools (OpenCode, Codex, Gemini CLI, …)**: same principle, different config file/syntax —
   don't assume Claude Code's `${VAR}` convention transfers as-is; read that tool's MCP config docs
   for its actual env-var expansion support before wiring it up.
+- **Pi has no native MCP client** — it only calls tools registered locally via its extension API
+  (`pi.registerTool`). Bridge a remote MCP server by writing a small extension (own subdirectory
+  under `tools/pi/extensions/`, own `package.json` with a `"pi": {"extensions": [...]}` field, own
+  `@modelcontextprotocol/sdk` dependency) that connects on `session_start`, calls `tools/list`,
+  converts each tool's JSON Schema to a TypeBox schema, and `registerTool`s a wrapper that forwards
+  to `tools/call` — see `tools/pi/extensions/ai-gateway-mcp/index.ts` for the reference
+  implementation. `install.sh` symlinks these subdirectory extensions the same way it does
+  single-file ones; `pi`'s own loader recurses one level into `extensions/*/package.json`.

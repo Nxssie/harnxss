@@ -111,6 +111,13 @@ if $present_pi; then
     [ -f "$ext" ] || continue
     backup_then_link "$ext" "$HOME/.pi/agent/extensions/$(basename "$ext")"
   done
+  # Multi-file extensions (own package.json + node_modules, e.g. MCP bridges)
+  # live in a subdirectory and get symlinked whole — pi's loader recurses one
+  # level into extensions/*/package.json.
+  for extdir in "$HARNXSS"/tools/pi/extensions/*/; do
+    [ -f "$extdir/package.json" ] || continue
+    backup_then_link "${extdir%/}" "$HOME/.pi/agent/extensions/$(basename "$extdir")"
+  done
 fi
 
 # ── Skills (first-party) → each tool's skills dir ────────────────────────────

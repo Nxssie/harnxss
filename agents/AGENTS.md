@@ -50,6 +50,11 @@ chat may be in **Spanish** — match the language I write to you in.
   self-hosted gateway instead of running everything on the calling agent's own model.
 - Available model IDs live in `tools/pi/extensions/llm.ts` (fetched live from the gateway).
 
+## MCP servers
+Self-hosted remote MCP servers get registered at global/user scope, not per-project — see
+`agents/modules/mcp-servers.md` for the convention (env-var-referenced tokens, per-tool
+verification).
+
 ## Secrets
 Never write a real credential into a tracked file. Reference env vars (`{env:VAR}`, `env_key`,
 `${VAR}`) and keep real values in `~/.config/fish/conf.d/secrets.fish` (gitignored).

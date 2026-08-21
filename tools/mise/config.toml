@@ -4,11 +4,13 @@
 
 [tools]
 bun = "latest"
+codex = "latest"
 go = "latest"
 gradle = "latest"
 java = "corretto-25"   # current LTS (Amazon Corretto 25)
 maven = "latest"
 node = "lts"
+pi = "latest"
 python = "latest"
 rust = "latest"
 terraform = "latest"

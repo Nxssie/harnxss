@@ -9,14 +9,6 @@ const BASE_URL = "https://llm.nxssie.dev/v1";
 // (see networkAllowed below), but it still must never hang indefinitely.
 const REFRESH_TIMEOUT_MS = 5_000;
 
-// Unsubscribed as of 2026-08-16 — drop from ENABLED_OVERRIDES (or remove the
-// entry outright) once the subscription actually lapses.
-const DISABLED_PREFIXES = ["nan-"];
-
-// Exceptions to DISABLED_PREFIXES — kept active while the nan subscription
-// runs (through 2026-08-16).
-const ENABLED_OVERRIDES = ["nan-deepseek-v4-flash-0731"];
-
 const DEFAULTS = {
   reasoning: false,
   input: ["text"],
@@ -29,11 +21,6 @@ const DEFAULTS = {
 // gateway is expected to route needs an entry here; anything it lists without
 // one falls back to DEFAULTS.
 const METADATA: Record<string, Partial<ProviderModelConfig>> = {
-  "nan-deepseek-v4-flash-0731": {
-    name: "DeepSeek V4 Flash 284B A13B",
-    contextWindow: 262144,
-    maxTokens: 16384,
-  },
   "opencode-go-glm-5.2": {
     name: "GLM 5.2",
     reasoning: true,
@@ -64,13 +51,6 @@ const METADATA: Record<string, Partial<ProviderModelConfig>> = {
   },
 };
 
-function isEnabled(id: string): boolean {
-  return (
-    ENABLED_OVERRIDES.includes(id) ||
-    !DISABLED_PREFIXES.some((prefix) => id.startsWith(prefix))
-  );
-}
-
 function toModel(id: string): ProviderModelConfig {
   return { id, name: id, ...DEFAULTS, ...METADATA[id] };
 }
@@ -79,9 +59,7 @@ function toModel(id: string): ProviderModelConfig {
 // picker must never end up empty on a transient catalog failure: an empty
 // provider surfaces as "No models available", which reads like a login problem
 // and hides the actual cause (missing key, gateway down, no network yet).
-const SEED_MODELS: ProviderModelConfig[] = Object.keys(METADATA)
-  .filter(isEnabled)
-  .map(toModel);
+const SEED_MODELS: ProviderModelConfig[] = Object.keys(METADATA).map(toModel);
 
 // Structural subset of pi-ai's RefreshModelsContext (not re-exported by
 // pi-coding-agent).
@@ -128,10 +106,7 @@ async function refreshModels(context: RefreshContext): Promise<ProviderModelConf
       throw new Error(`gateway /models returned ${res.status} ${res.statusText}`);
     }
     const body = (await res.json()) as { data: { id: string }[] };
-    const models = body.data
-      .map(({ id }) => id)
-      .filter(isEnabled)
-      .map(toModel);
+    const models = body.data.map(({ id }) => id).map(toModel);
     if (models.length === 0) return fallback();
 
     await context.publish({ persist: { models, checkedAt: Date.now() } });

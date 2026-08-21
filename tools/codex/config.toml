@@ -21,10 +21,22 @@ model_provider = "llm"
 model = "opencode-go-glm-5.2"
 model_provider = "llm"
 
+[profiles.opencode-go-glm-5.3]
+model = "opencode-go-glm-5.3"
+model_provider = "llm"
+
 [profiles.opencode-go-kimi-k3]
 model = "opencode-go-kimi-k3"
 model_provider = "llm"
 
+[profiles.opencode-go-ox-alpha-free]
+model = "opencode-go-ox-alpha-free"
+model_provider = "llm"
+
 [profiles.opencode-go-qwen3.8-max]
 model = "opencode-go-qwen3.8-max"
+model_provider = "llm"
+
+[profiles.openrouter-qwen-qwen-image-3-pro]
+model = "openrouter-qwen-qwen-image-3-pro"
 model_provider = "llm"

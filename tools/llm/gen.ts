@@ -87,27 +87,6 @@ opencode.provider.llm.options.baseURL = config.baseUrl;
 writeFileSync(opencodePath, JSON.stringify(opencode, null, 2) + "\n");
 console.log("  wrote   tools/opencode/opencode.json");
 
-// ── codex ─────────────────────────────────────────────────────────────────────
-// Codex has no model-discovery hook (confirmed: no /models call, `-m` is a
-// free-text flag), so we generate one profile per gateway model instead of a
-// single hardcoded default — `codex -p <model-id>` switches with zero config.
-const codexPath = resolve(REPO, "tools/codex/config.toml");
-const profiles = models
-  .map((m) => `[profiles.${m.id}]\nmodel = "${m.id}"\nmodel_provider = "llm"\n`)
-  .join("\n");
-const codexToml =
-  `#:schema https://developers.openai.com/codex/config-schema.json\n\n` +
-  `model_provider = "llm"\n` +
-  `model = "${models[0]?.id ?? ""}"\n\n` +
-  `[model_providers.llm]\n` +
-  `name = "LLM Gateway"\n` +
-  `base_url = "${config.baseUrl}"\n` +
-  `env_key = "NX_LLM_GATEWAY_KEY"\n` +
-  `wire_api = "chat"\n\n` +
-  `${profiles}`;
-writeFileSync(codexPath, codexToml);
-console.log("  wrote   tools/codex/config.toml");
-
 // ── factory ───────────────────────────────────────────────────────────────────
 const factoryPath = resolve(HOME, ".factory/settings.json");
 try {

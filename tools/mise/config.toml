@@ -5,7 +5,6 @@
 [tools]
 bun = "latest"
 claude = "latest"
-codex = "latest"
 gh = "latest"
 go = "latest"
 gradle = "latest"

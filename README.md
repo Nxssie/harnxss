@@ -3,10 +3,10 @@
 Centralized, self-owned configuration for my AI coding tools. This repo is the **single source of
 truth**: one canonical `AGENTS.md`, my skills, my commands, and each tool's config live here, and an
 installer symlinks them into the **global** config location of every tool. Clone on a new machine,
-run the installer, and Claude Code / OpenCode / Pi / Gemini are all configured identically.
+run the installer, and Claude Code / OpenCode / Pi are all configured identically.
 
 > Philosophy: one versioned repo holds the real files; the symlinks point *out* into
-> `~/.claude`, `~/.config/opencode`, `~/.pi/agent`, `~/.gemini`. Fully self-owned — no third-party
+> `~/.claude`, `~/.config/opencode`, `~/.pi/agent`. Fully self-owned — no third-party
 > skill manager. **Agnostic by design**: encodes my languages and methodologies, never the content
 > or explicit stack of any specific project.
 
@@ -46,11 +46,9 @@ The installer only touches tools that are present, backs up any existing real fi
 |---------------------------------|-------------------------------------|
 | `agents/AGENTS.md`              | `~/.config/opencode/AGENTS.md`       |
 | `agents/AGENTS.md`              | `~/.claude/CLAUDE.md` (Claude has no AGENTS.md) |
-| `agents/AGENTS.md`              | `~/.gemini/GEMINI.md` (if present)   |
 | `agents/AGENTS.md`              | `~/.pi/agent/AGENTS.md` (if present) |
 | `tools/claude/settings.json`    | `~/.claude/settings.json`            |
 | `tools/opencode/opencode.json`  | `~/.config/opencode/opencode.json`   |
-| `tools/gemini/settings.json`    | `~/.gemini/settings.json` (if present) |
 | `tools/mise/config.toml`        | `~/.config/mise/config.toml` (if present) |
 | `tools/pi/settings.json`        | `~/.pi/agent/settings.json` (copied, if present) |
 | `tools/pi/APPEND_SYSTEM.md`     | `~/.pi/agent/APPEND_SYSTEM.md` (if present) |
@@ -64,8 +62,6 @@ state and credentials).
 ## Why `AGENTS.md` is the single file
 - **OpenCode** reads `AGENTS.md` natively (global + per-project).
 - **Claude Code** reads `CLAUDE.md` only, so its global file is a symlink → `AGENTS.md`.
-- **Gemini** reads `GEMINI.md` by default; `tools/gemini/settings.json` sets `context.fileName` so it
-  also reads `AGENTS.md`.
 - **Pi** reads `~/.pi/agent/AGENTS.md`, a symlink → `AGENTS.md`; `tools/pi/extensions/*.ts` are linked
   into `~/.pi/agent/extensions/`.
 

@@ -117,7 +117,6 @@ export function getToolStatuses(): ToolStatus[] {
     { id: 'claude',   name: 'Claude Code', installed: existsSync(join(HOME, '.claude')) },
     { id: 'opencode', name: 'OpenCode',    installed: existsSync(join(HOME, '.config/opencode')) },
     { id: 'pi',       name: 'Pi',          installed: existsSync(join(HOME, '.pi/agent')) },
-    { id: 'gemini',   name: 'Gemini',      installed: existsSync(join(HOME, '.gemini')) },
     { id: 'factory',  name: 'Factory',     installed: existsSync(join(HOME, '.factory')) },
     { id: 'mise',     name: 'Mise',        installed: existsSync(join(HOME, '.config/mise')) },
   ]

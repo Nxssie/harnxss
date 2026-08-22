@@ -16,9 +16,9 @@ so every project session gets it, not just one repo.
   "Authorization: Bearer \${VAR_NAME}" -s user`. Verify with `claude mcp list`. Stored in
   `~/.claude.json` under `mcpServers.<name>.headers`, with the `${VAR}` placeholder — Claude Code
   expands it from the environment at connect time, so the file itself never holds the secret.
-- **Other tools (OpenCode, Codex, Gemini CLI, …)**: same principle, different config file/syntax —
-  don't assume Claude Code's `${VAR}` convention transfers as-is; read that tool's MCP config docs
-  for its actual env-var expansion support before wiring it up.
+- **Other tools (OpenCode, Droid, …)**: same principle, different config file/syntax — don't assume
+  Claude Code's `${VAR}` convention transfers as-is; read that tool's MCP config docs for its actual
+  env-var expansion support before wiring it up.
 - **Pi has no native MCP client** — it only calls tools registered locally via its extension API
   (`pi.registerTool`). Bridge a remote MCP server by writing a small extension (own subdirectory
   under `tools/pi/extensions/`, own `package.json` with a `"pi": {"extensions": [...]}` field, own

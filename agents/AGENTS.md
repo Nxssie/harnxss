@@ -2,7 +2,7 @@
 
 > Canonical engineering practices for Carlos Sánchez (Nxssie).
 > Single source of truth, symlinked into every AI tool's global config (Claude Code,
-> OpenCode, Gemini). Keep this file **lean and tool-agnostic** — see `profile/`
+> OpenCode, Pi). Keep this file **lean and tool-agnostic** — see `profile/`
 > for who I am and `agents/modules/` for stack-specific conventions.
 
 ## Who you're working with

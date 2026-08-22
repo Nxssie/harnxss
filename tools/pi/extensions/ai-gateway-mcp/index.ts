@@ -76,23 +76,17 @@ export default function (pi: ExtensionAPI) {
       const properties = (inputSchema.properties ?? {}) as Record<string, Record<string, unknown>>;
       const required = (inputSchema.required ?? []) as string[];
 
-      const requiredProps: Record<string, TSchema> = {};
-      const optionalProps: Record<string, TSchema> = {};
+      // A single Type.Object with Type.Optional() fields — not
+      // Type.Intersect() of two objects. typebox v1's Intersect serializes
+      // to a bare `{"allOf": [...]}` with no top-level "type": "object",
+      // which strict providers (e.g. Kimi K3 via the gateway) reject with
+      // "tools.function.parameters.type is required and must be object".
+      const allProps: Record<string, TSchema> = {};
       for (const [key, val] of Object.entries(properties)) {
-        if (required.includes(key)) requiredProps[key] = mcpJsonSchemaToTypebox(val);
-        else optionalProps[key] = mcpJsonSchemaToTypebox(val);
+        const converted = mcpJsonSchemaToTypebox(val);
+        allProps[key] = required.includes(key) ? converted : Type.Optional(converted);
       }
-
-      const hasRequired = Object.keys(requiredProps).length > 0;
-      const hasOptional = Object.keys(optionalProps).length > 0;
-      const finalParams = hasRequired
-        ? hasOptional
-          ? Type.Intersect([
-              Type.Object(requiredProps, { additionalProperties: false }),
-              Type.Partial(Type.Object(optionalProps, { additionalProperties: false })),
-            ])
-          : Type.Object(requiredProps, { additionalProperties: false })
-        : Type.Partial(Type.Object(optionalProps, { additionalProperties: false }));
+      const finalParams = Type.Object(allProps, { additionalProperties: false });
 
       pi.registerTool({
         name: `${TOOL_PREFIX}${tool.name}`,

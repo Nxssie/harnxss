@@ -1,24 +1,3 @@
 {
-  "baseUrl": "https://llm.nxssie.dev/v1",
-  "disabledPrefixes": ["nan-"],
-  "enabledOverrides": ["nan-deepseek-v4-flash-0731"],
-  "overrides": {
-    "nan-deepseek-v4-flash-0731": {
-      "name": "DeepSeek V4 Flash 284B A13B",
-      "contextWindow": 262144,
-      "maxTokens": 16384
-    },
-    "opencode-go-glm-5.2": {
-      "name": "GLM 5.2",
-      "contextWindow": 1000000,
-      "maxTokens": 131072,
-      "reasoning": true
-    },
-    "opencode-go-kimi-k3": {
-      "name": "Kimi K3",
-      "contextWindow": 1048576,
-      "maxTokens": 131072,
-      "reasoning": true
-    }
-  }
+  "baseUrl": "https://llm.nxssie.dev/v1"
 }

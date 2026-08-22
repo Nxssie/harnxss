@@ -83,17 +83,23 @@ directly. One virtual key (`NX_LLM_GATEWAY_KEY`), one place to add/remove models
 credentials. The provider catalog itself (which upstreams are wired into LiteLLM) lives in
 `~/Projects/personal/ai-gateway`, not here.
 
-Model *discovery* is zero-config: `tools/llm/gen.ts` calls `GET {baseUrl}/models` on the gateway at
-generation time and propagates whatever it finds into `opencode.json` and
-`~/.factory/settings.json` (both need a static list). `tools/llm/models.json` no longer enumerates
-models — it's an optional `id → {name, contextWindow, maxTokens, ...}` metadata override map;
-anything the gateway returns without an entry there gets sane defaults. **Pi** goes one step
-further and needs no generation step at all: `pi/extensions/llm.ts` is hand-written, static code
-that implements `refreshModels()` and re-fetches `/models` from the gateway at runtime.
+Model *discovery* is zero-config: `tools/llm/gen.ts` calls `GET {baseUrl}/model_group/info` on the
+gateway at generation time — LiteLLM's own endpoint, readable with just the gateway API key, that
+returns each model's context window (`max_input_tokens`), max output tokens (`max_output_tokens`),
+and vision/reasoning support alongside its id. That gets propagated into `opencode.json` and
+`~/.factory/settings.json` (both need a static list). `tools/llm/models.json` carries no per-model
+metadata anymore — only `baseUrl` and optional `disabledPrefixes`/`enabledOverrides` filters. Known
+providers (OpenAI, Anthropic, OpenRouter…) get accurate limits automatically from LiteLLM's built-in
+cost map; custom/self-hosted models (e.g. OpenCode Go) only report real numbers once set by hand in
+ai-gateway's Models screen (Capabilities section) — otherwise `gen.ts` falls back to generic
+defaults (128k context / 8k output). **Pi** goes one step further and needs no generation step at
+all: `pi/extensions/llm.ts` is hand-written, static code that implements `refreshModels()` and
+re-fetches the same `/model_group/info` from the gateway at runtime.
 
-Adding a model in LiteLLM means: re-run `bun run tools/llm/gen.ts` (or `sh install.sh`) to refresh
-OpenCode/Factory, and it just appears in Pi on its own next refresh — no repo edits needed unless
-you want to give it a friendly display name via `models.json`.
+Adding a model means: register it in ai-gateway (filling in Capabilities there if it's a custom
+provider LiteLLM doesn't already know), then re-run `bun run tools/llm/gen.ts` (or `sh install.sh`)
+to refresh OpenCode/Factory — it just appears in Pi on its own next refresh. No repo edits needed
+here anymore; ai-gateway is the single source of truth for model metadata.
 
 ## Adding a skill / command
 1. Create `agents/skills/<name>/SKILL.md` (YAML frontmatter: `name`, `description` + markdown body)

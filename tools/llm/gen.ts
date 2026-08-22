@@ -5,19 +5,10 @@ const REPO = resolve(import.meta.dir, "../..");
 const HOME = process.env.HOME!;
 const GATEWAY_API_KEY = process.env.NX_LLM_GATEWAY_KEY ?? "";
 
-interface ModelOverride {
-  name?: string;
-  contextWindow?: number;
-  maxTokens?: number;
-  reasoning?: boolean;
-  multimodal?: boolean;
-}
-
 interface GatewayConfig {
   baseUrl: string;
   disabledPrefixes?: string[];
   enabledOverrides?: string[];
-  overrides: Record<string, ModelOverride>;
 }
 
 interface Model {
@@ -29,11 +20,17 @@ interface Model {
   multimodal: boolean;
 }
 
+interface ModelGroupInfo {
+  model_group: string;
+  max_input_tokens: number | null;
+  max_output_tokens: number | null;
+  supports_vision: boolean;
+  supports_reasoning: boolean;
+}
+
 const DEFAULTS = {
   contextWindow: 128_000,
   maxTokens: 8_192,
-  reasoning: false,
-  multimodal: false,
 };
 
 const config: GatewayConfig = JSON.parse(
@@ -41,41 +38,48 @@ const config: GatewayConfig = JSON.parse(
 );
 
 // ── discover models live from the gateway (single source of truth) ──────────
-async function fetchModelIds(): Promise<string[]> {
-  const res = await fetch(`${config.baseUrl}/models`, {
+// ai-gateway's LiteLLM proxy exposes full capability metadata (context window,
+// max output tokens, vision/reasoning support) via its own /model_group/info —
+// no ai-gateway-specific endpoint needed, any valid gateway API key can read
+// it. Known providers get these fields from LiteLLM's built-in cost map
+// automatically; custom/self-hosted models (e.g. OpenCode Go) only report
+// accurate numbers once set by hand in ai-gateway's Models screen — otherwise
+// they come back null and fall back to DEFAULTS below.
+async function fetchModelGroups(): Promise<ModelGroupInfo[]> {
+  const root = config.baseUrl.replace(/\/v1\/?$/, "");
+  const res = await fetch(`${root}/model_group/info`, {
     headers: GATEWAY_API_KEY ? { Authorization: `Bearer ${GATEWAY_API_KEY}` } : {},
   });
   if (!res.ok) {
     throw new Error(
-      `gateway /models returned ${res.status} ${res.statusText} — is NX_LLM_GATEWAY_KEY set?`,
+      `gateway /model_group/info returned ${res.status} ${res.statusText} — is NX_LLM_GATEWAY_KEY set?`,
     );
   }
-  const body = (await res.json()) as { data: { id: string }[] };
-  return body.data.map((m) => m.id).sort();
+  const body = (await res.json()) as { data: ModelGroupInfo[] };
+  return body.data.sort((a, b) => a.model_group.localeCompare(b.model_group));
 }
 
 const disabledPrefixes = config.disabledPrefixes ?? [];
 const enabledOverrides = config.enabledOverrides ?? [];
-const allIds = await fetchModelIds();
-const ids = allIds.filter(
-  (id) => enabledOverrides.includes(id) || !disabledPrefixes.some((p) => id.startsWith(p)),
+const allGroups = await fetchModelGroups();
+const groups = allGroups.filter(
+  (g) =>
+    enabledOverrides.includes(g.model_group) ||
+    !disabledPrefixes.some((p) => g.model_group.startsWith(p)),
 );
-const skipped = allIds.length - ids.length;
+const skipped = allGroups.length - groups.length;
 if (skipped > 0) {
   console.log(`  skip     ${skipped} disabled model(s) (prefixes: ${disabledPrefixes.join(", ")})`);
 }
-const models: Model[] = ids.map((id) => {
-  const o = config.overrides[id] ?? {};
-  return {
-    id,
-    name: o.name ?? id,
-    contextWindow: o.contextWindow ?? DEFAULTS.contextWindow,
-    maxTokens: o.maxTokens ?? DEFAULTS.maxTokens,
-    reasoning: o.reasoning ?? DEFAULTS.reasoning,
-    multimodal: o.multimodal ?? DEFAULTS.multimodal,
-  };
-});
-console.log(`  fetched  ${models.length} models from ${config.baseUrl}/models`);
+const models: Model[] = groups.map((g) => ({
+  id: g.model_group,
+  name: g.model_group,
+  contextWindow: g.max_input_tokens ?? DEFAULTS.contextWindow,
+  maxTokens: g.max_output_tokens ?? DEFAULTS.maxTokens,
+  reasoning: g.supports_reasoning,
+  multimodal: g.supports_vision,
+}));
+console.log(`  fetched  ${models.length} models from ${config.baseUrl}/model_group/info`);
 
 // ── opencode ──────────────────────────────────────────────────────────────────
 const opencodePath = resolve(REPO, "tools/opencode/opencode.json");

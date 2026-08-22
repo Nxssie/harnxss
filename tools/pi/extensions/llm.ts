@@ -9,6 +9,10 @@ const BASE_URL = "https://llm.nxssie.dev/v1";
 // (see networkAllowed below), but it still must never hang indefinitely.
 const REFRESH_TIMEOUT_MS = 5_000;
 
+const DISABLED_PREFIXES: string[] = [];
+
+const ENABLED_OVERRIDES: string[] = [];
+
 const DEFAULTS = {
   reasoning: false,
   input: ["text"],
@@ -17,49 +21,52 @@ const DEFAULTS = {
   maxTokens: 8_192,
 } satisfies Partial<ProviderModelConfig>;
 
-// Per-model metadata. Doubles as the offline seed catalog, so every id the
-// gateway is expected to route needs an entry here; anything it lists without
-// one falls back to DEFAULTS.
-const METADATA: Record<string, Partial<ProviderModelConfig>> = {
-  "opencode-go-glm-5.2": {
-    name: "GLM 5.2",
-    reasoning: true,
-    contextWindow: 1_000_000,
-    maxTokens: 131_072,
-  },
-  "opencode-go-kimi-k3": {
-    name: "Kimi K3",
-    reasoning: true,
-    contextWindow: 1000000,
-    maxTokens: 131_072,
-  },
-  "opencode-go-qwen3.8-max": {
-    name: "Qwen 3.8 Max",
-  },
-  "opencode-go-deepseek-v4-flash": {
-    name: "DeepSeek V4 Flash",
-    reasoning: true,
-    contextWindow: 1_048_576,
-    maxTokens: 384000,
-    reasoningEffortMap: {
-      "minimal": "high",
-      "low": "high",
-      "medium": "high",
-      "high": "high",
-      "xhigh": "max"
-    }
-  },
-};
+// Bare bootstrap ids only — no capability metadata here anymore. All of
+// context window / max tokens / reasoning / vision now come live from
+// ai-gateway's LiteLLM proxy (GET /model_group/info, readable with just the
+// gateway API key — see tools/llm/gen.ts, which reads the same endpoint for
+// OpenCode/Codex/Factory). This list only exists so the picker isn't empty on
+// the very first ever cold start with no persisted cache and no network yet;
+// every subsequent start uses the cached catalog from the last live refresh,
+// which does carry real capability data.
+const SEED_IDS = ["opencode-go-glm-5.2", "opencode-go-kimi-k3"];
+
+function isEnabled(id: string): boolean {
+  return (
+    ENABLED_OVERRIDES.includes(id) ||
+    !DISABLED_PREFIXES.some((prefix) => id.startsWith(prefix))
+  );
+}
 
 function toModel(id: string): ProviderModelConfig {
-  return { id, name: id, ...DEFAULTS, ...METADATA[id] };
+  return { id, name: id, ...DEFAULTS };
+}
+
+interface ModelGroupInfo {
+  model_group: string;
+  max_input_tokens: number | null;
+  max_output_tokens: number | null;
+  supports_vision: boolean;
+  supports_reasoning: boolean;
+}
+
+function toModelFromGroup(g: ModelGroupInfo): ProviderModelConfig {
+  return {
+    id: g.model_group,
+    name: g.model_group,
+    reasoning: g.supports_reasoning,
+    input: g.supports_vision ? ["text", "image"] : DEFAULTS.input,
+    cost: DEFAULTS.cost,
+    contextWindow: g.max_input_tokens ?? DEFAULTS.contextWindow,
+    maxTokens: g.max_output_tokens ?? DEFAULTS.maxTokens,
+  };
 }
 
 // The gateway routes inference fine even when /models is unreachable, so the
 // picker must never end up empty on a transient catalog failure: an empty
 // provider surfaces as "No models available", which reads like a login problem
 // and hides the actual cause (missing key, gateway down, no network yet).
-const SEED_MODELS: ProviderModelConfig[] = Object.keys(METADATA).map(toModel);
+const SEED_MODELS: ProviderModelConfig[] = SEED_IDS.filter(isEnabled).map(toModel);
 
 // Structural subset of pi-ai's RefreshModelsContext (not re-exported by
 // pi-coding-agent).
@@ -98,15 +105,18 @@ async function refreshModels(context: RefreshContext): Promise<ProviderModelConf
     // Prefer pi's resolved credential (auth.json, chmod 600) so catalog refresh
     // works in non-interactive shells, where the env var is not exported.
     const apiKey = context.credential?.key ?? process.env.NX_LLM_GATEWAY_KEY ?? "";
-    const res = await fetch(`${BASE_URL}/models`, {
+    const root = BASE_URL.replace(/\/v1\/?$/, "");
+    const res = await fetch(`${root}/model_group/info`, {
       headers: apiKey ? { Authorization: `Bearer ${apiKey}` } : {},
       signal: AbortSignal.any([context.signal, AbortSignal.timeout(REFRESH_TIMEOUT_MS)]),
     });
     if (!res.ok) {
-      throw new Error(`gateway /models returned ${res.status} ${res.statusText}`);
+      throw new Error(`gateway /model_group/info returned ${res.status} ${res.statusText}`);
     }
-    const body = (await res.json()) as { data: { id: string }[] };
-    const models = body.data.map(({ id }) => id).map(toModel);
+    const body = (await res.json()) as { data: ModelGroupInfo[] };
+    const models = body.data
+      .filter((g) => isEnabled(g.model_group))
+      .map(toModelFromGroup);
     if (models.length === 0) return fallback();
 
     await context.publish({ persist: { models, checkedAt: Date.now() } });

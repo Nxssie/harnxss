@@ -45,7 +45,7 @@ agents/
 
 ## Editing global instructions
 
-- Edit `agents/AGENTS.md` directly. Keep it lean — Codex caps the global file at 32 KiB.
+- Edit `agents/AGENTS.md` directly. Keep it lean and tool-agnostic.
 - Run `sh install.sh` (propagates to all tools via symlinks).
 
 ## Rules

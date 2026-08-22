@@ -12,11 +12,20 @@
         "opencode-go-glm-5.2": {
           "name": "GLM 5.2"
         },
+        "opencode-go-glm-5.3": {
+          "name": "opencode-go-glm-5.3"
+        },
         "opencode-go-kimi-k3": {
           "name": "Kimi K3"
         },
+        "opencode-go-ox-alpha-free": {
+          "name": "opencode-go-ox-alpha-free"
+        },
         "opencode-go-qwen3.8-max": {
           "name": "opencode-go-qwen3.8-max"
+        },
+        "openrouter-qwen-qwen-image-3-pro": {
+          "name": "openrouter-qwen-qwen-image-3-pro"
         }
       },
       "name": "LLM Gateway",

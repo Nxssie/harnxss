@@ -3,10 +3,10 @@
 Centralized, self-owned configuration for my AI coding tools. This repo is the **single source of
 truth**: one canonical `AGENTS.md`, my skills, my commands, and each tool's config live here, and an
 installer symlinks them into the **global** config location of every tool. Clone on a new machine,
-run the installer, and Claude Code / OpenCode / Codex / Pi / Gemini are all configured identically.
+run the installer, and Claude Code / OpenCode / Pi / Gemini are all configured identically.
 
 > Philosophy: one versioned repo holds the real files; the symlinks point *out* into
-> `~/.claude`, `~/.config/opencode`, `~/.codex`, `~/.pi/agent`, `~/.gemini`. Fully self-owned — no third-party
+> `~/.claude`, `~/.config/opencode`, `~/.pi/agent`, `~/.gemini`. Fully self-owned — no third-party
 > skill manager. **Agnostic by design**: encodes my languages and methodologies, never the content
 > or explicit stack of any specific project.
 
@@ -44,27 +44,25 @@ The installer only touches tools that are present, backs up any existing real fi
 
 | Source (this repo)              | Target                              |
 |---------------------------------|-------------------------------------|
-| `agents/AGENTS.md`              | `~/.codex/AGENTS.md`                 |
 | `agents/AGENTS.md`              | `~/.config/opencode/AGENTS.md`       |
 | `agents/AGENTS.md`              | `~/.claude/CLAUDE.md` (Claude has no AGENTS.md) |
 | `agents/AGENTS.md`              | `~/.gemini/GEMINI.md` (if present)   |
 | `agents/AGENTS.md`              | `~/.pi/agent/AGENTS.md` (if present) |
 | `tools/claude/settings.json`    | `~/.claude/settings.json`            |
 | `tools/opencode/opencode.json`  | `~/.config/opencode/opencode.json`   |
-| `tools/codex/config.toml`       | `~/.codex/config.toml`               |
 | `tools/gemini/settings.json`    | `~/.gemini/settings.json` (if present) |
 | `tools/mise/config.toml`        | `~/.config/mise/config.toml` (if present) |
 | `tools/pi/settings.json`        | `~/.pi/agent/settings.json` (copied, if present) |
 | `tools/pi/APPEND_SYSTEM.md`     | `~/.pi/agent/APPEND_SYSTEM.md` (if present) |
 | `tools/pi/extensions/*.ts`      | `~/.pi/agent/extensions/` (if present) |
-| `agents/skills/<name>`          | `~/.claude/skills/`, `~/.config/opencode/skill/`, `~/.codex/skills/`, `~/.pi/agent/skills/` |
+| `agents/skills/<name>`          | `~/.claude/skills/`, `~/.config/opencode/skill/`, `~/.pi/agent/skills/` |
 | `agents/commands/<name>.md`     | `~/.claude/commands/`, `~/.config/opencode/command/` |
 
 Only individual files/subdirs are linked — never the whole `~/.claude/` dir (it also holds runtime
 state and credentials).
 
 ## Why `AGENTS.md` is the single file
-- **Codex** and **OpenCode** read `AGENTS.md` natively (global + per-project).
+- **OpenCode** reads `AGENTS.md` natively (global + per-project).
 - **Claude Code** reads `CLAUDE.md` only, so its global file is a symlink → `AGENTS.md`.
 - **Gemini** reads `GEMINI.md` by default; `tools/gemini/settings.json` sets `context.fileName` so it
   also reads `AGENTS.md`.
@@ -87,16 +85,15 @@ credentials. The provider catalog itself (which upstreams are wired into LiteLLM
 
 Model *discovery* is zero-config: `tools/llm/gen.ts` calls `GET {baseUrl}/models` on the gateway at
 generation time and propagates whatever it finds into `opencode.json` and
-`~/.factory/settings.json` (both need a static list) plus per-model profiles in `codex/config.toml`
-(`codex -p <model-id>` switches models). `tools/llm/models.json` no longer enumerates models — it's
-an optional `id → {name, contextWindow, maxTokens, ...}` metadata override map; anything the gateway
-returns without an entry there gets sane defaults. **Pi** goes one step further and needs no
-generation step at all: `pi/extensions/llm.ts` is hand-written, static code that implements
-`refreshModels()` and re-fetches `/models` from the gateway at runtime.
+`~/.factory/settings.json` (both need a static list). `tools/llm/models.json` no longer enumerates
+models — it's an optional `id → {name, contextWindow, maxTokens, ...}` metadata override map;
+anything the gateway returns without an entry there gets sane defaults. **Pi** goes one step
+further and needs no generation step at all: `pi/extensions/llm.ts` is hand-written, static code
+that implements `refreshModels()` and re-fetches `/models` from the gateway at runtime.
 
 Adding a model in LiteLLM means: re-run `bun run tools/llm/gen.ts` (or `sh install.sh`) to refresh
-OpenCode/Codex/Factory, and it just appears in Pi on its own next refresh — no repo edits needed
-unless you want to give it a friendly display name via `models.json`.
+OpenCode/Factory, and it just appears in Pi on its own next refresh — no repo edits needed unless
+you want to give it a friendly display name via `models.json`.
 
 ## Adding a skill / command
 1. Create `agents/skills/<name>/SKILL.md` (YAML frontmatter: `name`, `description` + markdown body)
@@ -111,7 +108,6 @@ unless you want to give it a friendly display name via `models.json`.
   copy (or `.bak.<epoch>` it) and re-running `sh install.sh`.
 - **Claude #25367** — a symlinked skill may log a cosmetic "Unknown skill" warning but still runs.
 - **OpenCode #18848** — symlinked skills aren't discovered inside a git-worktree sandbox session.
-- **Codex** — the global `AGENTS.md` is capped at 32 KiB; keep it lean (≤ ~5 KB).
 - Env vars must be exported in the shell that **launches** the tool. fish loads `conf.d/*.fish`
   automatically; a GUI launcher that doesn't source fish would leave them empty.
 

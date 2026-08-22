@@ -3,26 +3,32 @@
   "provider": {
     "llm": {
       "models": {
-        "nan-deepseek-v4-flash-0731": {
-          "name": "DeepSeek V4 Flash 284B A13B"
+        "cortecs-kimi-k3": {
+          "name": "cortecs-kimi-k3"
         },
         "opencode-go-deepseek-v4-flash": {
           "name": "opencode-go-deepseek-v4-flash"
         },
         "opencode-go-glm-5.2": {
-          "name": "GLM 5.2"
+          "name": "opencode-go-glm-5.2"
         },
         "opencode-go-glm-5.3": {
           "name": "opencode-go-glm-5.3"
         },
         "opencode-go-kimi-k3": {
-          "name": "Kimi K3"
+          "name": "opencode-go-kimi-k3"
         },
         "opencode-go-ox-alpha-free": {
           "name": "opencode-go-ox-alpha-free"
         },
         "opencode-go-qwen3.8-max": {
           "name": "opencode-go-qwen3.8-max"
+        },
+        "opencode-zen-gpt-5.6-luna": {
+          "name": "opencode-zen-gpt-5.6-luna"
+        },
+        "opencode-zen-kimi-k3": {
+          "name": "opencode-zen-kimi-k3"
         },
         "openrouter-qwen-qwen-image-3-pro": {
           "name": "openrouter-qwen-qwen-image-3-pro"

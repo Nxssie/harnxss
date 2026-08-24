@@ -1,0 +1,8 @@
+[install]
+# Supply-chain hardening — malicious npm versions are usually pulled within minutes/hours,
+# so a short cooldown avoids the compromised window (see Bitwarden CLI 2026-04-22 incident).
+ignoreScripts = true
+minimumReleaseAge = 86400 # 1 day, in seconds
+
+# Packages that legitimately need lifecycle scripts or same-day releases go here:
+# minimumReleaseAgeExcludes = ["some-pkg"]

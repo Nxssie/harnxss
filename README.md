@@ -29,6 +29,21 @@ install.sh            idempotent symlink installer
 sh install.sh
 ```
 
+On a machine without a local clone (e.g. a work laptop), bootstrap and install in one line — this
+clones to a throwaway temp dir, **copies** the resources in (no symlinks, no lasting repo), and
+deletes the temp clone when it's done:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/Nxssie/harnxss/main/install.sh | sh
+```
+
+To bootstrap a *persistent* clone instead (symlinked, like a manual `git clone` + `./install.sh`),
+set `HARNXSS_DIR`:
+
+```sh
+HARNXSS_DIR=~/code/harnxss sh -c "$(curl -fsSL https://raw.githubusercontent.com/Nxssie/harnxss/main/install.sh)"
+```
+
 Then set your secrets and reload the shell:
 
 ```sh
@@ -112,6 +127,8 @@ here anymore; ai-gateway is the single source of truth for model metadata.
 - **OpenCode #18848** — symlinked skills aren't discovered inside a git-worktree sandbox session.
 - Env vars must be exported in the shell that **launches** the tool. fish loads `conf.d/*.fish`
   automatically; a GUI launcher that doesn't source fish would leave them empty.
+- **Ephemeral (`curl | sh`) installs don't get the `hn` TUI command** — it needs a persistent path
+  to run `bun` against, which an ephemeral install deliberately doesn't leave behind.
 
 ## Credits
 

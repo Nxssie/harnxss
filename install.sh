@@ -8,19 +8,82 @@
 # Only touches tools that are present (binary on PATH or config dir exists).
 #
 # Usage:
-#   sh install.sh        # symlink resources into each tool's global config (idempotent)
+#   sh install.sh                                       # from an existing local clone: symlinks
+#   curl -fsSL https://raw.githubusercontent.com/Nxssie/harnxss/main/install.sh | sh
+#                                                         # bootstraps into a throwaway temp dir,
+#                                                         # COPIES resources in (no lasting repo,
+#                                                         # nothing left behind). Good for a
+#                                                         # work/borrowed machine.
+#   HARNXSS_DIR=~/code/harnxss sh -c "$(curl -fsSL ...)"
+#                                                         # bootstraps a persistent clone at that
+#                                                         # path instead and symlinks into it, same
+#                                                         # as a manual git clone + ./install.sh
 #
 # Note: ~/.claude/settings.json and ~/.pi/agent/settings.json are COPIED (not symlinked) — both
 # tools rewrite their settings at runtime (model, effort/thinking level, changelog marker) and
 # would otherwise clobber the versioned hub file.
 set -eu
 
-HARNXSS="$(cd "$(dirname "$0")" && pwd)"
 for arg in "$@"; do
   echo "unknown arg: $arg" >&2; exit 2
 done
 
 have() { command -v "$1" >/dev/null 2>&1; }
+
+# ── Locate or bootstrap the repo ──────────────────────────────────────────
+# Local run (./install.sh from a real clone): use that clone in place and
+# SYMLINK — the repo stays the single source of truth, tools read through it.
+# Remote run (curl ... | sh) with no $HARNXSS_DIR: clone to a throwaway temp
+# dir and COPY resources instead — no persistent repo or symlink survives on
+# disk once the script exits, which is the point on a work/borrowed machine.
+# Remote run WITH $HARNXSS_DIR set: clone there persistently and symlink, same
+# as a manual clone.
+GITHUB_SSH="git@github.com:Nxssie/harnxss.git"
+GITHUB_HTTPS="https://github.com/Nxssie/harnxss.git"
+
+script_dir=""
+if [ -f "$0" ]; then
+  script_dir="$(cd "$(dirname "$0")" && pwd)"
+fi
+
+LINK_MODE="link"
+EPHEMERAL=false
+
+clone_harnxss() {
+  dest="$1"
+  echo "bootstrapping into: $dest"
+  mkdir -p "$(dirname "$dest")"
+  for url in "$GITHUB_SSH" "$GITHUB_HTTPS"; do
+    echo "  trying $url"
+    if git clone --quiet --depth 1 "$url" "$dest" 2>/dev/null; then
+      return 0
+    fi
+    rm -rf "$dest"
+  done
+  echo "error: could not clone harnxss from GitHub" >&2
+  exit 1
+}
+
+if [ -n "$script_dir" ] && [ -d "$script_dir/.git" ]; then
+  HARNXSS="$script_dir"
+elif [ -n "${HARNXSS_DIR:-}" ]; then
+  HARNXSS="$HARNXSS_DIR"
+  if [ -d "$HARNXSS/.git" ]; then
+    echo "updating existing clone: $HARNXSS"
+    git -C "$HARNXSS" pull --ff-only
+  else
+    clone_harnxss "$HARNXSS"
+  fi
+  echo
+else
+  EPHEMERAL=true
+  LINK_MODE="copy"
+  HARNXSS="$(mktemp -d "${TMPDIR:-/tmp}/harnxss.XXXXXX")"
+  trap 'rm -rf "$HARNXSS"' EXIT
+  clone_harnxss "$HARNXSS"
+  echo "ephemeral install: copying resources in, no repo or symlinks will be left behind"
+  echo
+fi
 
 # seed_local_copy SRC DST LABEL — copy once, never touch again. For settings
 # files a tool rewrites at runtime (model, effort, flags); symlinking would let
@@ -37,9 +100,11 @@ seed_local_copy() {
   fi
 }
 
-# backup_then_link SRC DST [copy]
+# backup_then_link SRC DST [link|copy] — mode defaults to $LINK_MODE (set once
+# during bootstrap: "link" for a persistent local clone, "copy" for an
+# ephemeral one, since its source will be gone by the time the tool reads it).
 backup_then_link() {
-  src="$1"; dst="$2"; mode="${3:-link}"
+  src="$1"; dst="$2"; mode="${3:-$LINK_MODE}"
   if [ "$mode" = "link" ] && [ -L "$dst" ] && \
      [ "$(readlink -f "$dst" 2>/dev/null)" = "$(readlink -f "$src" 2>/dev/null)" ]; then
     echo "  ok      $dst"
@@ -52,8 +117,8 @@ backup_then_link() {
     echo "  backup  $dst -> $bak"
   fi
   if [ "$mode" = "copy" ]; then
-    rm -f "$dst"
-    cp "$src" "$dst"
+    rm -rf "$dst"
+    cp -R "$src" "$dst"
     echo "  copy    $dst"
   else
     ln -sfn "$src" "$dst"
@@ -147,8 +212,12 @@ else
 fi
 
 # ── harnxss TUI command (hn) ─────────────────────────────────────────────────
+# Needs a persistent $HARNXSS to run from — skipped for an ephemeral install
+# since that path is deleted the moment this script exits.
 echo "hn command:"
-if have bun; then
+if $EPHEMERAL; then
+  echo "  skip    ephemeral install has no persistent path for hn to run from"
+elif have bun; then
   hn_fn="$HOME/.config/fish/functions/hn.fish"
   cat > "$hn_fn" << EOF
 function hn --description 'harnxss TUI'
@@ -161,4 +230,8 @@ else
 fi
 echo
 
-echo "Done. Restart your AI tools (and 'exec fish') to pick up changes."
+if $EPHEMERAL; then
+  echo "Done (ephemeral). Resources were copied in, nothing left on disk. Restart your AI tools (and 'exec fish') to pick up changes."
+else
+  echo "Done. Restart your AI tools (and 'exec fish') to pick up changes."
+fi

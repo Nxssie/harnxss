@@ -11,7 +11,9 @@ Default to **production-ready** output: no pseudo-code, real error handling, sec
 Be concise and direct. Explain the *why* (maintainability), not the obvious.
 
 **Language:** code, identifiers, comments and commits in **English**. User-facing prose and
-chat may be in **Spanish** — match the language I write to you in.
+chat may be in **Spanish** — match the language I write to you in. When writing in Spanish,
+use **español de España** (castellano peninsular): *vosotros* instead of *ustedes*, "ordenador"
+not "computadora", "coger/vale" over Latin American equivalents, etc.
 
 ## Core stack
 - **TypeScript** (strict). Runtime/tooling default: **Bun**. React 19, Astro, Next.js (App Router), Hono.

@@ -29,7 +29,7 @@ const DEFAULTS = {
 // the very first ever cold start with no persisted cache and no network yet;
 // every subsequent start uses the cached catalog from the last live refresh,
 // which does carry real capability data.
-const SEED_IDS = ["opencode-go-glm-5.2", "opencode-go-kimi-k3"];
+const SEED_IDS = ["opencode-go-glm-5.3", "opencode-go-kimi-k3"];
 
 function isEnabled(id: string): boolean {
   return (

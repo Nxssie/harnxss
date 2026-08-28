@@ -200,6 +200,23 @@ for cmd in "$HARNXSS"/agents/commands/*.md; do
   if $present_opencode; then backup_then_link "$cmd" "$HOME/.config/opencode/command/$name"; fi
 done
 
+# ── Persistent SSH agent (systemd socket-activated) ───────────────────────────
+echo "ssh agent:"
+if have systemctl && systemctl --user list-unit-files ssh-agent.socket >/dev/null 2>&1; then
+  systemctl --user enable --now ssh-agent.socket >/dev/null 2>&1
+  echo "  ok      ssh-agent.socket enabled (persistent agent at \$XDG_RUNTIME_DIR/ssh-agent.socket)"
+else
+  echo "  skip    systemd ssh-agent.socket not available"
+fi
+for f in "$HARNXSS"/shell/conf.d/*.fish; do
+  [ -f "$f" ] || continue
+  backup_then_link "$f" "$HOME/.config/fish/conf.d/$(basename "$f")"
+done
+for f in "$HARNXSS"/shell/functions/*.fish; do
+  [ -f "$f" ] || continue
+  backup_then_link "$f" "$HOME/.config/fish/functions/$(basename "$f")"
+done
+
 # ── Secrets bootstrap (never overwrites an existing real file) ───────────────
 echo "secrets:"
 secrets="$HOME/.config/fish/conf.d/secrets.fish"

@@ -29,7 +29,7 @@ const DEFAULTS = {
 // the very first ever cold start with no persisted cache and no network yet;
 // every subsequent start uses the cached catalog from the last live refresh,
 // which does carry real capability data.
-const SEED_IDS = ["opencode-go-glm-5.3", "opencode-go-kimi-k3"];
+const SEED_IDS = ["opencode-go-nxssie-glm-5.3", "opencode-go-nxssie-kimi-k3"];
 
 function isEnabled(id: string): boolean {
   return (
@@ -106,16 +106,29 @@ async function refreshModels(context: RefreshContext): Promise<ProviderModelConf
     // works in non-interactive shells, where the env var is not exported.
     const apiKey = context.credential?.key ?? process.env.NX_LLM_GATEWAY_KEY ?? "";
     const root = BASE_URL.replace(/\/v1\/?$/, "");
-    const res = await fetch(`${root}/model_group/info`, {
-      headers: apiKey ? { Authorization: `Bearer ${apiKey}` } : {},
-      signal: AbortSignal.any([context.signal, AbortSignal.timeout(REFRESH_TIMEOUT_MS)]),
-    });
-    if (!res.ok) {
-      throw new Error(`gateway /model_group/info returned ${res.status} ${res.statusText}`);
+    const headers = apiKey ? { Authorization: `Bearer ${apiKey}` } : {};
+    const signal = AbortSignal.any([context.signal, AbortSignal.timeout(REFRESH_TIMEOUT_MS)]);
+    // /model_group/info still lists paused (blocked) groups — LiteLLM 1.99.1 only
+    // filters them from /v1/models — but the router refuses to serve blocked
+    // deployments, so intersect with the OpenAI list to keep paused models out
+    // of the picker (they would 4xx on first request).
+    const [groupRes, listRes] = await Promise.all([
+      fetch(`${root}/model_group/info`, { headers, signal }),
+      fetch(`${root}/v1/models`, { headers, signal }),
+    ]);
+    if (!groupRes.ok) {
+      throw new Error(`gateway /model_group/info returned ${groupRes.status} ${groupRes.statusText}`);
     }
-    const body = (await res.json()) as { data: ModelGroupInfo[] };
+    if (!listRes.ok) {
+      throw new Error(`gateway /v1/models returned ${listRes.status} ${listRes.statusText}`);
+    }
+    const [body, list] = (await Promise.all([groupRes.json(), listRes.json()])) as [
+      { data: ModelGroupInfo[] },
+      { data: { id: string }[] },
+    ];
+    const servable = new Set(list.data.map((m) => m.id));
     const models = body.data
-      .filter((g) => isEnabled(g.model_group))
+      .filter((g) => servable.has(g.model_group) && isEnabled(g.model_group))
       .map(toModelFromGroup);
     if (models.length === 0) return fallback();
 

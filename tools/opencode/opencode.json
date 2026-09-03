@@ -1,7 +1,7 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "provider": {
-    "llm": {
+    "opencode-gateway": {
       "models": {
         "cortecs-kimi-k3": {
           "name": "cortecs-kimi-k3"
@@ -11,6 +11,9 @@
         },
         "opencode-go-glm-5.3": {
           "name": "opencode-go-glm-5.3"
+        },
+        "opencode-go-glm-5.3-flash": {
+          "name": "opencode-go-glm-5.3-flash"
         },
         "opencode-go-kimi-k3": {
           "name": "opencode-go-kimi-k3"

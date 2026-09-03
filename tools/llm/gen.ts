@@ -82,12 +82,16 @@ const models: Model[] = groups.map((g) => ({
 console.log(`  fetched  ${models.length} models from ${config.baseUrl}/model_group/info`);
 
 // ── opencode ──────────────────────────────────────────────────────────────────
+// Provider id is "opencode-gateway" (not "llm"): the TUI only sends its
+// x-opencode-session/request/client headers when the provider id starts with
+// "opencode" — that's what OpenCode Go's prompt-caching/anti-abuse wants, and
+// ai-gateway's litellm-config.yaml forwards them upstream.
 const opencodePath = resolve(REPO, "tools/opencode/opencode.json");
 const opencode = JSON.parse(readFileSync(opencodePath, "utf-8"));
-opencode.provider.llm.models = Object.fromEntries(
+opencode.provider["opencode-gateway"].models = Object.fromEntries(
   models.map((m) => [m.id, { name: m.name }]),
 );
-opencode.provider.llm.options.baseURL = config.baseUrl;
+opencode.provider["opencode-gateway"].options.baseURL = config.baseUrl;
 writeFileSync(opencodePath, JSON.stringify(opencode, null, 2) + "\n");
 console.log("  wrote   tools/opencode/opencode.json");
 

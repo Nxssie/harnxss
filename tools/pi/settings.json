@@ -1,6 +1,6 @@
 {
   "defaultProvider": "llm",
-  "defaultModel": "opencode-go-deepseek-v4-flash",
+  "defaultModel": "opencode-go-nxssie-deepseek-v4-flash",
   "lastChangelogVersion": "0.82.1",
   "theme": "dark",
   "defaultThinkingLevel": "high"

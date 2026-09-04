@@ -18,6 +18,9 @@
 #                                                         # bootstraps a persistent clone at that
 #                                                         # path instead and symlinks into it, same
 #                                                         # as a manual git clone + ./install.sh
+#   HARNXSS_SKIP_GEN=1 sh install.sh                    # skip the gateway model codegen, so a
+#                                                         # re-run for symlinks alone doesn't dirty
+#                                                         # the versioned opencode.json/factory files
 #
 # Note: ~/.claude/settings.json and ~/.pi/agent/settings.json are COPIED (not symlinked) — both
 # tools rewrite their settings at runtime (model, effort/thinking level, changelog marker) and
@@ -145,7 +148,9 @@ echo
 
 # ── gateway model codegen (source of truth → opencode + pi + factory) ───────
 echo "gateway models:"
-if have bun; then
+if [ -n "${HARNXSS_SKIP_GEN:-}" ]; then
+  echo "  skip    HARNXSS_SKIP_GEN set — opencode.json and factory settings left as committed"
+elif have bun; then
   bun run "$HARNXSS/tools/llm/gen.ts"
 else
   echo "  skip    bun not found — opencode.json and factory settings NOT regenerated"

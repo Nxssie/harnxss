@@ -162,6 +162,8 @@ if $present_pi;       then backup_then_link "$AGENTS" "$HOME/.pi/agent/AGENTS.md
 echo "tool configs:"
 if $present_claude; then
   seed_local_copy "$HARNXSS/tools/claude/settings.json" "$HOME/.claude/settings.json" "Claude"
+  # statusLine hook referenced by settings.json (model · effort · context gauge).
+  backup_then_link "$HARNXSS/tools/claude/statusline.ts" "$HOME/.claude/statusline.ts"
 fi
 if $present_opencode; then backup_then_link "$HARNXSS/tools/opencode/opencode.json" "$HOME/.config/opencode/opencode.json"; fi
 if $present_mise;     then backup_then_link "$HARNXSS/tools/mise/config.toml"         "$HOME/.config/mise/config.toml"; fi

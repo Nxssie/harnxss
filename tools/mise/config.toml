@@ -2,6 +2,10 @@
 # Policy: latest stable or LTS for every runtime.
 # Symlinked from harnxss to ~/.config/mise/config.toml; run `mise install` after changes.
 
+[settings]
+minimum_release_age = "1d"
+minimum_release_age_excludes = ["claude"]
+
 [tools]
 bun = "latest"
 claude = "latest"

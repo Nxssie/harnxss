@@ -5,7 +5,7 @@ description: Author and maintain agent resources in the harnxss hub — add/edit
 
 # harnxss
 
-Dogfood skill for authoring resources in `~/Projects/personal/harnxss`.
+Dogfood skill for authoring resources in `~/Projects/nxssie/harnxss`.
 Every change must end with `sh install.sh` to propagate symlinks into all tools.
 
 ## Repo layout (agent layer)

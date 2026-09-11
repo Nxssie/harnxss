@@ -6,6 +6,12 @@
         "cortecs-kimi-k3": {
           "name": "cortecs-kimi-k3"
         },
+        "opencode-go-deepseek-flash": {
+          "name": "opencode-go-deepseek-flash"
+        },
+        "opencode-go-glm-5.3": {
+          "name": "opencode-go-glm-5.3"
+        },
         "opencode-go-glm-5.3-flash": {
           "name": "opencode-go-glm-5.3-flash"
         },

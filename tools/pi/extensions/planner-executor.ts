@@ -4,9 +4,14 @@ import type { AgentMessage, ThinkingLevel } from "@earendil-works/pi-agent-core"
 import type { Api, AssistantMessage, Model, TextContent } from "@earendil-works/pi-ai";
 import { CONFIG_DIR_NAME, getAgentDir, isToolCallEventType } from "@earendil-works/pi-coding-agent";
 import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
+import { Key, truncateToWidth } from "@earendil-works/pi-tui";
 import { Type } from "typebox";
 
 const MARK_DONE_TOOL = "pe_mark_done";
+// Compact view keeps the widget bounded regardless of plan size: header, the
+// active step and a one-line tail. Full view lists every step but still clips
+// each line to the terminal width so the editor never gets pushed off-screen.
+const TOGGLE_VIEW_SHORTCUT = Key.ctrlAlt("e");
 
 // Big model plans (read-only exploration), small model executes (full tool access).
 // Model pair is user-configured via /pe-models — never hardcoded, since gateway
@@ -29,6 +34,7 @@ interface TodoItem {
 }
 
 type Phase = "idle" | "planning" | "reviewing" | "executing";
+type WidgetView = "compact" | "full";
 
 interface OriginalState {
   model: Model<Api> | undefined;
@@ -124,6 +130,7 @@ export default function plannerExecutorExtension(pi: ExtensionAPI): void {
   let phase: Phase = "idle";
   let todos: TodoItem[] = [];
   let original: OriginalState | undefined;
+  let widgetView: WidgetView = "compact";
 
   function persist(): void {
     pi.appendEntry("planner-executor-state", {
@@ -133,6 +140,32 @@ export default function plannerExecutorExtension(pi: ExtensionAPI): void {
       originalThinkingLevel: original?.thinkingLevel,
       originalTools: original?.tools,
     } satisfies PersistedState);
+  }
+
+  function renderWidgetLines(ctx: ExtensionContext, width: number): string[] {
+    const { theme } = ctx.ui;
+    const done = todos.filter((t) => t.completed).length;
+    const pending = todos.filter((t) => !t.completed);
+    const clip = (line: string) => truncateToWidth(line, width, "…");
+    const hint = theme.fg("dim", `${TOGGLE_VIEW_SHORTCUT} ${widgetView === "compact" ? "expand" : "collapse"} · /pe-status browse`);
+    const header = clip(`${theme.fg("accent", `⚙ Plan ${done}/${todos.length}`)}  ${hint}`);
+
+    if (widgetView === "full") {
+      const lines = todos.map((t) =>
+        t.completed
+          ? theme.fg("success", `☑ ${theme.strikethrough(t.text)}`)
+          : `${theme.fg("muted", "☐ ")}${t.text}`,
+      );
+      return [header, ...lines.map(clip)];
+    }
+
+    const [active, ...rest] = pending;
+    const lines = [header];
+    if (active) lines.push(clip(`${theme.fg("accent", "▶ ")}${active.text}`));
+    if (rest.length > 0) {
+      lines.push(clip(theme.fg("dim", `  … ${rest.length} more pending, ${done} done`)));
+    }
+    return lines;
   }
 
   function updateStatus(ctx: ExtensionContext): void {
@@ -146,15 +179,32 @@ export default function plannerExecutorExtension(pi: ExtensionAPI): void {
     }
 
     if (phase === "executing" && todos.length > 0) {
-      const lines = todos.map((t) =>
-        t.completed
-          ? ctx.ui.theme.fg("success", `☑ ${ctx.ui.theme.strikethrough(t.text)}`)
-          : `${ctx.ui.theme.fg("muted", "☐ ")}${t.text}`,
-      );
-      ctx.ui.setWidget("planner-executor", lines);
+      // Component form so the widget re-renders on terminal resize with the real width.
+      ctx.ui.setWidget("planner-executor", () => ({
+        render: (width: number) => renderWidgetLines(ctx, width),
+        invalidate() {},
+      }));
     } else {
       ctx.ui.setWidget("planner-executor", undefined);
     }
+  }
+
+  async function browsePlan(ctx: ExtensionContext): Promise<void> {
+    if (!ctx.hasUI) return;
+    if (phase === "idle") {
+      ctx.ui.notify("Planner-Executor is idle", "info");
+      return;
+    }
+    if (todos.length === 0) {
+      ctx.ui.notify(`Phase: ${phase} (no plan yet)`, "info");
+      return;
+    }
+    // Selecting a step shows its full text, since long steps get clipped in the list.
+    const labels = todos.map((t) => `${t.completed ? "✓" : "○"} ${t.step}. ${t.text}`);
+    const choice = await ctx.ui.select(`Plan (${todos.filter((t) => t.completed).length}/${todos.length} done, phase: ${phase})`, labels);
+    if (!choice) return;
+    const todo = todos[labels.indexOf(choice)];
+    if (todo) ctx.ui.notify(`Step ${todo.step} (${todo.completed ? "done" : "pending"}):\n${todo.text}`, "info");
   }
 
   async function resetToOriginal(ctx: ExtensionContext): Promise<void> {
@@ -315,14 +365,15 @@ export default function plannerExecutorExtension(pi: ExtensionAPI): void {
   });
 
   pi.registerCommand("pe-status", {
-    description: "Show planner-executor progress",
-    handler: async (_args, ctx) => {
-      if (phase === "idle") {
-        ctx.ui.notify("Planner-Executor is idle", "info");
-        return;
-      }
-      const list = todos.map((t, i) => `${i + 1}. ${t.completed ? "✓" : "○"} ${t.text}`).join("\n") || "(no plan yet)";
-      ctx.ui.notify(`Phase: ${phase}\n${list}`, "info");
+    description: "Browse the planner-executor plan step by step",
+    handler: async (_args, ctx) => browsePlan(ctx),
+  });
+
+  pi.registerShortcut(TOGGLE_VIEW_SHORTCUT, {
+    description: "Planner-Executor: toggle compact/full plan widget",
+    handler: async (ctx) => {
+      widgetView = widgetView === "compact" ? "full" : "compact";
+      updateStatus(ctx);
     },
   });
 

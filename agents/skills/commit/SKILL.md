@@ -25,6 +25,30 @@ type(scope): short imperative description
 - **description**: imperative, lowercase, no trailing period, ≤72 chars.
 - Breaking change: add `!` after type/scope (`feat(api)!: ...`) and a `BREAKING CHANGE:` footer.
 
+## fix or feature?
+
+The boundary is not size or files touched — it is **the promise**: does the change repair
+something that did not do what it intended, or add a capability that did not exist?
+
+Ask, in order:
+
+1. Does it add something that was not there before (capability, option, screen, persisted state,
+   platform)? → **feature**.
+2. Could someone have relied on the old behaviour and be surprised by the new one? → **feature**
+   (or `!` if it breaks them).
+3. Did the old behaviour fail against its own intent — unreachable, misleading, wrong on an edge
+   case, inconsistent, inaccessible (contrast, touch target, label), data silently lost? → **fix**.
+
+Tie-breaker: **if you cannot write "expected vs actual", it is not a fix.** If you can, it is a
+fix even when it touches a dozen files and changes pixels.
+
+UI lands on either side by that same test: reordering a control because users kept hitting the
+wrong one is `fix(ui)`; reordering it because it looks better is `style`. Rewriting an error
+message because the user could not act on it is a fix; shortening it for taste is `style`.
+
+The same test picks the version: fixed-only → patch; anything added, or changed in a way someone
+has to relearn → minor.
+
 ## Rules
 - Invoking this skill **is** the instruction to commit — commit directly, don't ask permission
   again. Surface the message(s) first only when the grouping is genuinely ambiguous (step 4).

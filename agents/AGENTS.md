@@ -21,7 +21,7 @@ otherwise-English text.
 - **Java 25 (LTS)** with **Spring Boot**, Clean Architecture, JPA/Hibernate.
 - **Python** (latest): type hints, async, **FastAPI**.
 - **Rust** for CLIs (clap/serde).
-- **Kotlin** for desktop (Compose).
+- **Kotlin** for desktop (Compose) and Android — conventions: `agents/modules/kotlin.md`.
 - Data/AI: LLM agents, RAG, MCP.
 - **Versions**: **mise** is the single version manager — all runtimes (Node, Bun, Python, Java, Go, Gradle, Maven, Rust) on latest stable or LTS.
 

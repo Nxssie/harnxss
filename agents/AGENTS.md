@@ -39,6 +39,8 @@ otherwise-English text.
 - **Atomic commits**: one logical change per commit.
 - **Conventional Commits**: `type(scope): description` — feat, fix, docs, style, refactor, test, chore, ci, build.
   The `commit` skill is your workflow guide — use it **only** when the user instructs you to commit.
+- **Branches**: `main` holds released states, `dev/<version>` integrates the current cycle — see
+  `agents/modules/branching.md`.
 - Branch before committing on a default branch. Never commit secrets.
 
 ## Deploy & self-hosting (my defaults)
